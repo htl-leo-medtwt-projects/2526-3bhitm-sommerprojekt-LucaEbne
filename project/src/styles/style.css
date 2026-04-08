@@ -9,7 +9,7 @@
 }
 
 :root {
-	--primary-bg: #FCFCF8;
+	--primary-bg: #FCFAF8;
 	--secondary-bg: #F3EDE3;
 	--primary-text: #000000;
 	--primary-text-light: #ffffff;
@@ -22,7 +22,7 @@
 	--primary-dark: #153664;
 	--muted: #ede6d6;
 	--accent-dark: #4dc4c4;
-	--border: #d4dae3;
+	--border: #DAE4EE;
 	--sand: #f0e8d8;
 
 	--shadow-card: 0 4px 24px -4px rgba(21, 54, 100, 0.08);
@@ -74,7 +74,7 @@ header {
 
 .logo {
 	font-family: var(--font-display);
-	font-size: 1.3rem;
+	font-size: 1.15rem;
 	font-weight: 700;
 	color: var(--primary-dark);
 	display: flex;
@@ -97,7 +97,7 @@ nav {
 	text-decoration: none;
 	color: var(--secondary-text);
 	font-family: var(--font-display);
-	font-size: 1.05rem;
+	font-size: 0.95rem;
 	font-weight: 400;
 	transition: color 0.3s ease;
 }
@@ -122,7 +122,7 @@ nav {
 
 .hero-content h1 {
 	font-family: var(--font-display);
-	font-size: 5rem;
+	font-size: clamp(2.5rem, 6.2vw, 4rem);
 	font-weight: 700;
 	margin-bottom: 2rem;
 	line-height: 1.15;
@@ -130,7 +130,7 @@ nav {
 }
 
 .hero-content p {
-	font-size: 1.15rem;
+	font-size: 1rem;
 	margin-bottom: 2.5rem;
 	opacity: 0.98;
 	max-width: 650px;
@@ -140,14 +140,14 @@ nav {
 
 .btn {
 	display: inline-block;
-	padding: var(--spacing-sm) var(--spacing-xl);
+	padding: 0.78rem 2.3rem;
 	background-color: var(--button-color);
 	color: white;
 	text-decoration: none;
 	border-radius: 50px;
 	font-family: var(--font-body);
 	font-weight: 600;
-	font-size: 1rem;
+	font-size: 0.92rem;
 	transition: all 0.3s ease;
 	border: none;
 	cursor: pointer;
@@ -193,7 +193,7 @@ nav {
 
 .featured-islands-header h2 {
 	font-family: var(--font-display);
-	font-size: clamp(2rem, 3vw, 3.15rem);
+	font-size: clamp(1.7rem, 2.6vw, 2.5rem);
 	font-weight: 700;
 	line-height: 1.2;
 	color: var(--fg);
@@ -202,7 +202,7 @@ nav {
 
 .featured-islands-header p {
 	font-family: var(--font-body);
-	font-size: 1.25rem;
+	font-size: 1.05rem;
 	font-weight: 600;
 	color: #78899c;
 	max-width: 680px;
@@ -247,14 +247,14 @@ nav {
 
 .island-card-content h3 {
 	font-family: var(--font-display);
-	font-size: 2rem;
+	font-size: 1.65rem;
 	line-height: 1.1;
 	color: #1a1c21;
 }
 
 .island-card-content p {
 	font-family: var(--font-body);
-	font-size: 1.12rem;
+	font-size: 1rem;
 	font-weight: 500;
 	line-height: 1.45;
 	color: #6f8298;
@@ -270,7 +270,7 @@ nav {
 
 .island-card-footer span {
 	font-family: var(--font-body);
-	font-size: 0.98rem;
+	font-size: 0.88rem;
 	font-weight: 700;
 	color: #6c7e93;
 	letter-spacing: 0.02em;
@@ -279,7 +279,7 @@ nav {
 
 .island-btn {
 	font-family: var(--font-body);
-	font-size: 0.95rem;
+	font-size: 0.86rem;
 	font-weight: 700;
 	text-decoration: none;
 	color: #486f99;
@@ -298,10 +298,16 @@ nav {
 
 .islands-empty {
 	font-family: var(--font-body);
-	font-size: 1.05rem;
+	font-size: 0.98rem;
 	color: var(--secondary-text);
 	text-align: center;
 	padding: 1rem 0;
+}
+
+@media (max-width: 920px) {
+	.hero-content h1 {
+		font-size: clamp(2.1rem, 7.8vw, 3.2rem);
+	}
 }
 
 @media (max-width: 1250px) {
@@ -316,7 +322,7 @@ nav {
 	}
 
 	.featured-islands-header p {
-		font-size: 1rem;
+		font-size: 0.95rem;
 	}
 
 	.island-grid {
@@ -329,6 +335,6 @@ nav {
 	}
 
 	.island-card-content h3 {
-		font-size: 1.7rem;
+		font-size: 1.45rem;
 	}
 }
