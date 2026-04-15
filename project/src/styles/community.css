@@ -1,0 +1,122 @@
+.community-travel {
+    padding: 4.1rem 0 5rem;
+    background: #f3f3f3;
+}
+
+.community-travel-container {
+    max-width: 1260px;
+}
+
+.community-travel-header {
+    text-align: center;
+    margin-bottom: 2.4rem;
+}
+
+.community-travel-header h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.9rem, 2.8vw, 2.8rem);
+    line-height: 1.12;
+    color: #141519;
+    margin-bottom: 0.4rem;
+}
+
+.community-travel-header p {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: #7f90a2;
+    font-weight: 600;
+}
+
+.community-story-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.6rem;
+}
+
+.community-story-card {
+    display: flex;
+    flex-direction: column;
+    border-radius: 1.3rem;
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid #dbe4ee;
+    box-shadow: 0 2px 0 rgba(21, 54, 100, 0.02), 0 8px 20px -14px rgba(21, 54, 100, 0.34);
+    transition: transform 0.24s ease, box-shadow 0.24s ease;
+}
+
+.community-story-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 32px -18px rgba(21, 54, 100, 0.45);
+}
+
+.community-story-image {
+    width: 100%;
+    height: 196px;
+    object-fit: cover;
+    background: #d7dfeb;
+}
+
+.community-story-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.05rem 1.15rem 0.95rem;
+    min-height: 200px;
+}
+
+.community-story-content h3 {
+    font-family: var(--font-display);
+    font-size: 1.9rem;
+    line-height: 1.08;
+    color: #1a1b20;
+}
+
+.community-story-content p {
+    font-family: var(--font-body);
+    font-size: 1.28rem;
+    line-height: 1.4;
+    color: #6f8196;
+    overflow: hidden;
+}
+
+.community-story-author {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.55rem;
+}
+
+.community-author-avatar {
+    width: 1.82rem;
+    height: 1.82rem;
+    border-radius: 999px;
+    object-fit: cover;
+    border: 1px solid #f5c86c;
+    background: #f7d98a;
+}
+
+.community-author-fallback {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-body);
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: #7b4f10;
+}
+
+.community-author-name {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #2a323c;
+}
+
+.community-empty {
+    text-align: center;
+    font-family: var(--font-body);
+    color: var(--secondary-text);
+    font-size: 1rem;
+    padding: 1rem 0;
+}

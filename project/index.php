@@ -10,6 +10,9 @@ require './src/database/mysql.php';
 	<title>Aegean Breeze</title>
 	<link rel="icon" href="assets/img/Logo.png" type="image/png">
 	<link rel="stylesheet" href="src/styles/style.css">
+	<link rel="stylesheet" href="src/styles/islands.css">
+	<link rel="stylesheet" href="src/styles/beaches.css">
+	<link rel="stylesheet" href="src/styles/community.css">
 	<script src="src/scripts/main.js" defer></script>
 </head>
 
@@ -39,6 +42,8 @@ require './src/database/mysql.php';
 	</section>
 
 	<?php include './src/php/islands.php'; ?>
+	<?php include './src/php/beaches.php'; ?>
+	<?php include './src/php/community-travel-storys.php'; ?>
 </body>
 
 </html>
