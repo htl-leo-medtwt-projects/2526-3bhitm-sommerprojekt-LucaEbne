@@ -44,6 +44,49 @@ require './src/database/mysql.php';
 	<?php include './src/php/islands.php'; ?>
 	<?php include './src/php/beaches.php'; ?>
 	<?php include './src/php/community-travel-storys.php'; ?>
+
+	<footer class="site-footer">
+		<div class="site-footer-container">
+			<div class="site-footer-top">
+				<div class="site-footer-brand">
+					<div class="site-footer-logo">
+						<img src="assets/img/Logo.png" alt="Aegean Breeze Logo">
+						<span>Aegean Breeze</span>
+					</div>
+					<p>Your ultimate guide to the most beautiful islands, beaches and hidden gems of Greece.</p>
+				</div>
+
+				<div class="site-footer-column">
+					<h3>EXPLORE</h3>
+					<a href="#home">Home</a>
+					<a href="#islands">Islands</a>
+					<a href="#beaches">Beaches</a>
+				</div>
+
+				<div class="site-footer-column">
+					<h3>COMMUNITY</h3>
+					<a href="#">Stories</a>
+					<a href="#">Forum</a>
+					<a href="#">Events</a>
+				</div>
+
+				<div class="site-footer-column">
+					<h3>ABOUT ME</h3>
+					<p>Luca Ebner</p>
+					<p>l.ebner@students.htl-leonding.ac.at<</p>
+					<p>HTL-Leonding</p>
+				</div>
+			</div>
+
+			<div class="site-footer-divider"></div>
+
+			<div class="site-footer-bottom">
+				<p>&copy; 2026 Greek Island Explorer. All rights reserved.</p>
+			</div>
+		</div>
+	</footer>
+
+	
 </body>
 
 </html>
