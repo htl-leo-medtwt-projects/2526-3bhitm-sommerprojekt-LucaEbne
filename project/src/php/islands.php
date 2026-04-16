@@ -43,7 +43,7 @@ if (!empty($islands)) {
 					<h3>{$name}</h3>
 					<p>{$description}</p>
 					<div class='island-card-footer'>
-						<a class='island-btn' href='#'>View Island</a>
+						<a class='island-btn' href='src/php/islands-detailed.php?id=" . urlencode($island['id'] ?? '') . "'>View Island</a>
 					</div>
 				</div>
 			</article>";
