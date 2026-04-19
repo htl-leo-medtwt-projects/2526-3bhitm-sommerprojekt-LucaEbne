@@ -1,0 +1,228 @@
+.island-detail-hero {
+    background:
+        linear-gradient(180deg, rgba(21, 52, 92, 0.5) 0%, rgba(21, 52, 92, 0.22) 58%, rgba(251, 249, 245, 0.92) 100%),
+        var(--detail-hero-image) center/cover no-repeat;
+    height: min(74vh, 760px);
+    min-height: 470px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: 0 2.6rem 3.3rem;
+    text-align: left;
+}
+
+.island-detail-content {
+    max-width: 760px;
+    color: #ffffff;
+}
+
+.island-detail-country {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    opacity: 0.9;
+}
+
+.island-detail-content h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.8rem, 8vw, 4.5rem);
+    line-height: 1.06;
+    margin: 0.35rem 0 0.7rem;
+}
+
+.island-detail-content p {
+    font-family: var(--font-body);
+    font-size: 1.08rem;
+    font-weight: 500;
+    line-height: 1.48;
+    max-width: 680px;
+    margin-bottom: 1.7rem;
+    color: #eaf0f7;
+}
+
+.island-detail-actions {
+    display: flex;
+    gap: 1.15rem;
+    flex-wrap: wrap;
+}
+
+.island-detail-actions .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.62rem;
+    padding: 0.85rem 1.8rem;
+}
+
+.island-detail-actions .btn i {
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.island-detail-about {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 920px;
+    margin: 2.2rem auto 2.8rem;
+    padding: 0 1.25rem;
+}
+
+.island-detail-about h2 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 3vw, 3rem);
+    line-height: 1.1;
+    margin-bottom: 0.95rem;
+    color: #181f28;
+}
+
+.island-detail-about p {
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #6b7f96;
+    max-width: 640px;
+}
+
+.island-detail-beaches {
+	padding: 3.5rem 0;
+	background-color: #f8f6f2;
+}
+
+.island-detail-beaches-container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 1.25rem;
+}
+
+.island-detail-beaches > .island-detail-beaches-container > h2 {
+	font-family: var(--font-display);
+	font-size: clamp(2.2rem, 3.5vw, 3.2rem);
+	text-align: center;
+	margin-bottom: 2.5rem;
+	color: #181f28;
+}
+
+.island-beaches-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+	gap: 1.5rem;
+}
+
+.island-beach-card {
+	background: #ffffff;
+	border-radius: 1.5rem;
+	overflow: hidden;
+	box-shadow: 0 4px 16px rgba(21, 54, 100, 0.08);
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.island-beach-card:hover {
+	transform: translateY(-6px);
+	box-shadow: 0 8px 24px rgba(21, 54, 100, 0.15);
+}
+
+.island-beach-card img {
+	width: 100%;
+	height: 200px;
+	object-fit: cover;
+	display: block;
+}
+
+.island-beach-card-content {
+	padding: 1.25rem;
+}
+
+.island-beach-card-content h3 {
+	font-family: var(--font-display);
+	font-size: 1.35rem;
+	font-weight: 600;
+	margin-bottom: 0.4rem;
+	color: #1a1c21;
+}
+
+.island-beach-card-content p {
+	font-family: var(--font-body);
+	font-size: 0.9rem;
+	color: #6b7f96;
+	line-height: 1.5;
+}
+
+.island-detail-food {
+	padding: 3.5rem 0;
+	background-color: #ffffff;
+}
+
+.island-detail-food-container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 1.25rem;
+}
+
+.island-detail-food > .island-detail-food-container > h2 {
+	font-family: var(--font-display);
+	font-size: clamp(2.2rem, 3.5vw, 3.2rem);
+	text-align: center;
+	margin-bottom: 2.5rem;
+	color: #181f28;
+}
+
+.island-food-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+	gap: 1.5rem;
+}
+
+.island-food-card {
+	background: #ffffff;
+	border: 1px solid #e8eef5;
+	border-radius: 1.5rem;
+	overflow: hidden;
+	box-shadow: 0 4px 16px rgba(21, 54, 100, 0.08);
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.island-food-card:hover {
+	transform: translateY(-6px);
+	box-shadow: 0 8px 24px rgba(21, 54, 100, 0.15);
+}
+
+.island-food-card img {
+	width: 100%;
+	height: 200px;
+	object-fit: cover;
+	display: block;
+}
+
+.island-food-card-content {
+	padding: 1.25rem;
+}
+
+.island-food-card-content h3 {
+	font-family: var(--font-display);
+	font-size: 1.35rem;
+	font-weight: 600;
+	margin-bottom: 0.4rem;
+	color: #1a1c21;
+}
+
+.island-food-card-content p {
+	font-family: var(--font-body);
+	font-size: 0.9rem;
+	color: #6b7f96;
+	line-height: 1.5;
+}
+
+@media (max-width: 700px) {
+	.island-beaches-grid,
+	.island-food-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.island-detail-beaches > .island-detail-beaches-container > h2,
+	.island-detail-food > .island-detail-food-container > h2 {
+		font-size: clamp(1.8rem, 5vw, 2.2rem);
+	}
+}
