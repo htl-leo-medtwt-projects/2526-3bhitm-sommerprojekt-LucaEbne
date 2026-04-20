@@ -1,0 +1,147 @@
+* {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.login-page {
+    min-height: calc(100vh - 70px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    background: linear-gradient(rgba(15, 35, 60, 0.5), rgba(15, 35, 60, 0.5)),
+        url('../../assets/img/hero-santorini.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.login-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.login-card {
+    background: #FCFAF8;
+    border-radius: 20px;
+    padding: 35px 40px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+    animation: slideUp 0.6s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.login-logo {
+    width: 50px;
+    height: auto;
+    margin: 0 auto 12px;
+}
+
+.login-header h1 {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.login-header p {
+    font-family: var(--font-body);
+    color: #777;
+    font-size: 0.95rem;
+    margin-bottom: 30px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    font-family: var(--font-body);
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    background-color: rgba(243, 237, 226, 0.36);
+    font-size: 0.95rem;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+.form-group input::placeholder {
+    color: #bbb;
+}
+
+.form-group input:focus {
+    outline: none;
+    background-color: #f0ede9;
+    box-shadow: inset 0 0 0 1px rgba(118, 199, 199, 0.3);
+}
+
+.btn-login {
+    width: 100%;
+    padding: 14px;
+    background-color: #76c7c7;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+}
+
+.btn-login:hover {
+    background-color: #64b4b4;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(118, 199, 199, 0.4);
+}
+
+.login-footer {
+    margin-top: 25px;
+    color: #666;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+}
+
+.login-footer a {
+    font-family: var(--font-body);
+    color: #76c7c7;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.login-footer a:hover {
+    text-decoration: underline;
+    color: #5aa9a9;
+}

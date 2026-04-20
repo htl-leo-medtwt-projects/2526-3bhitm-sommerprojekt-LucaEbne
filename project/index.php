@@ -28,7 +28,7 @@ require './src/database/mysql.php';
 			<div class="nav-element"><a href="#islands">Islands</a></div>
 			<div class="nav-element"><a href="#beaches">Beaches</a></div>
 			<div class="nav-element"><a href="#community">Community</a></div>
-			<div class="nav-element"><a href="#login">Login</a></div>
+			<div class="nav-element"><a href="src/php/login-page.php">Login</a></div>
 		</nav>
 	</header>
 
