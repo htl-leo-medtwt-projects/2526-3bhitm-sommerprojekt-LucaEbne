@@ -44,7 +44,7 @@
                             class="profile-preview-img">
 
                         <div class="camera-badge">
-                            <i class="fa-regular fa-camera" style="color: rgb(255, 255, 255);"></i>
+                            <i class="fa-solid fa-camera" style="color: rgb(255, 255, 255);"></i>
                         </div>
                     </div>
                     <p class="upload-text">Click to upload a profile picture</p>
