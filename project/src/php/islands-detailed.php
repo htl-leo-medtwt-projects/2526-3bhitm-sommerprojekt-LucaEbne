@@ -1,7 +1,15 @@
 ﻿<?php
+// KI hat diese if-Abfrage hinzugefügt, da ich sonst ein Session Fehler bekommen habe.
+if (session_status() !== PHP_SESSION_ACTIVE && !headers_sent()) {
+	session_start();
+}
+// Ender der KI-Änderung
 if (!isset($conn)) {
 	require_once __DIR__ . '/../database/mysql.php';
 }
+
+$navLabel = !empty($_SESSION['user_id']) ? 'Profile' : 'Login';
+$navLink = !empty($_SESSION['user_id']) ? '../../index.php#home' : '../../src/php/login-page.php';
 
 $escape = static function ($value): string {
 	return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
@@ -113,7 +121,7 @@ $foodsHtml = renderFoodCards($foods, $escape);
 			<div class="nav-element"><a href="../../index.php#islands">Islands</a></div>
 			<div class="nav-element"><a href="../../index.php#beaches">Beaches</a></div>
 			<div class="nav-element"><a href="../../index.php#community">Community</a></div>
-			<div class="nav-element"><a href="../../index.php#login">Login</a></div>
+			<div class="nav-element"><a href="<?php echo $navLink; ?>"><?php echo $navLabel; ?></a></div>
 		</nav>
 	</header>
 

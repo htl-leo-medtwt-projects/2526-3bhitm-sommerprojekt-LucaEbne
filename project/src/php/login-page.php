@@ -1,4 +1,49 @@
+<?php
+session_start();
+require_once __DIR__ . '/../database/mysql.php';
 
+$navLabel = !empty($_SESSION['user_id']) ? 'Profile' : 'Login';
+$navLink = !empty($_SESSION['user_id']) ? '../../index.php#home' : '../../src/php/login-page.php';
+
+if (!empty($_SESSION['user_id'])) {
+    header('Location: ../../index.php#home');
+    exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = trim((string)($_POST['email'] ?? ''));
+    $password = (string)($_POST['password'] ?? '');
+
+    if ($email !== '' && $password !== '') {
+        $stmt = mysqli_prepare($conn, 'SELECT id, username, email, password FROM users WHERE email = ? LIMIT 1');
+
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, 's', $email);
+            mysqli_stmt_execute($stmt);
+            $result = mysqli_stmt_get_result($stmt);
+
+            if ($result instanceof mysqli_result) {
+                $user = mysqli_fetch_assoc($result);
+
+                if ($user && password_verify($password, (string)$user['password'])) {
+                    $_SESSION['user_id'] = (int)$user['id'];
+                    $_SESSION['username'] = (string)$user['username'];
+                    $_SESSION['email'] = (string)$user['email'];
+
+                    mysqli_free_result($result);
+                    mysqli_stmt_close($stmt);
+                    header('Location: ../../index.php#home');
+                    exit;
+                }
+
+                mysqli_free_result($result);
+            }
+
+            mysqli_stmt_close($stmt);
+        }
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -24,7 +69,7 @@
             <div class="nav-element"><a href="../../index.php#islands">Islands</a></div>
             <div class="nav-element"><a href="../../index.php#beaches">Beaches</a></div>
             <div class="nav-element"><a href="../../index.php#community">Community</a></div>
-            <div class="nav-element"><a href="../../src/php/login-page.php">Login</a></div>
+            <div class="nav-element"><a href="<?php echo $navLink; ?>"><?php echo $navLabel; ?></a></div>
         </nav>
     </header>
 
@@ -37,16 +82,16 @@
                     <h1>Welcome Back</h1>
                     <p>Login to share your travel stories</p>
                 </div>
-                <form class="login-form">
+                <form class="login-form" method="post" action="">
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" placeholder="your@email.com">
+                        <input type="email" id="email" name="email" placeholder="your@email.com" required>
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" id="password" name="password" placeholder="Enter your password">
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
                     </div>
-                    <button type="button" class="btn btn-login">Login</button>
+                    <button type="submit" class="btn btn-login">Login</button>
                 </form>
 
                 <div class="login-footer">

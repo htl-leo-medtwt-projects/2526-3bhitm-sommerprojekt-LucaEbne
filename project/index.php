@@ -1,5 +1,8 @@
 <?php
+session_start();
 require './src/database/mysql.php';
+$navLabel = !empty($_SESSION['user_id']) ? 'Profile' : 'Login';
+$navLink = !empty($_SESSION['user_id']) ? '#home' : 'src/php/login-page.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,7 +31,7 @@ require './src/database/mysql.php';
 			<div class="nav-element"><a href="#islands">Islands</a></div>
 			<div class="nav-element"><a href="#beaches">Beaches</a></div>
 			<div class="nav-element"><a href="#community">Community</a></div>
-			<div class="nav-element"><a href="src/php/login-page.php">Login</a></div>
+			<div class="nav-element"><a href="<?php echo $navLink; ?>"><?php echo $navLabel; ?></a></div>
 		</nav>
 	</header>
 
