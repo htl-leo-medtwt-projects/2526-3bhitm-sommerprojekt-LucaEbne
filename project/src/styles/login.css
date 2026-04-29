@@ -97,13 +97,17 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .profile-preview-img {
-    width: 40px;
-    height: 40px;
-    color: #153664;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
 }
 
 .camera-badge {
@@ -121,6 +125,7 @@ body {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     cursor: pointer;
     transition: transform 0.2s;
+    z-index: 1;
 }
 
 .profile-image-wrapper:hover .camera-badge {
