@@ -94,7 +94,91 @@ $foods = [
 
 $beachesHtml = renderBeachCards($beaches, $escape);
 $foodsHtml = renderFoodCards($foods, $escape);
+
+$community_travel_storys = [];
+$storyQuery = "SELECT p.*, u.username, u.profile_picture 
+               FROM posts p
+               JOIN users u ON p.user_id = u.id 
+               WHERE p.island_id = {$id}
+               ORDER BY p.created_at DESC LIMIT 3";
+
+$result = mysqli_query($conn, $storyQuery);
+
+if ($result instanceof mysqli_result) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        $community_travel_storys[] = $row;
+    }
+    mysqli_free_result($result);
+}
+
+function getStarRatingHtml(int $rating): string {
+    $html = '';
+    for ($i = 1; $i <= 5; $i++) {
+        if ($i <= $rating) {
+            $html .= '<i class="fa-solid fa-star" style="color: rgb(106, 192, 192);"></i>';
+        } else {
+            $html .= '<i class="fa-light fa-star" style="color: rgb(191, 241, 241);"></i>';
+        }
+    }
+    return $html;
+}
+
+$escape = static function ($value): string {
+    return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
+};
+
+function renderCommunityStories(array $community_travel_storys, callable $escape){
+echo "<section class='community-travel' id='community'>";
+echo "<div class='container community-travel-container'>";
+echo "<div class='community-travel-header'>
+        <h2>Travel Stories</h2>
+        <p>Recent experiences from our community</p>
+      </div>";
+
+if (!empty($community_travel_storys)) {
+    echo "<div class='community-story-grid'>";
+
+    for ($i = 0; $i < count($community_travel_storys); $i++) {
+        $story = $community_travel_storys[$i];
+        
+        $title = $escape($story['title'] ?? 'Travel Story');
+        $username = $escape($story['username'] ?? 'Traveler');
+        $rating = (int)($story['rating'] ?? 0);
+        
+        $content = (string)($story['content'] ?? '');
+        if (strlen($content) > 120) {
+            $content = substr($content, 0, 117) . '...';
+        }
+        $content = $escape($content);
+
+        $profilePicture = trim((string)($story['profile_picture'] ?? ''));
+        $safeProfilePicture = ($profilePicture !== '') ? $escape($profilePicture) : '../../assets/img/default-profile-img.png';
+
+        echo "<article class='community-story-card'>
+                <div class='community-story-content'>
+                    <div class='community-story-author'>
+                        <img src='{$safeProfilePicture}' class='community-author-avatar' alt='Avatar'>
+                        <span class='community-author-name'>{$username}</span>
+                    </div>
+                    <h3>{$title}</h3>
+                    <p>{$content}</p>
+                    <div class='story-footer' style='display: flex; align-items: center; gap: 10px; margin-top: 15px;'>
+                        <div class='stars'>" . getStarRatingHtml($rating) . "</div>
+                        <span style='font-size: 0.9em; color: #666;'>" . number_format($rating, 1) . "</span>
+                    </div>
+                </div>
+            </article>";
+    }
+
+    echo "</div>";
+} else {
+    echo "<p class='community-empty'>No stories yet for this island.</p>";
+}
+
+echo "</div></section>";
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -105,6 +189,7 @@ $foodsHtml = renderFoodCards($foods, $escape);
 	<link rel="icon" href="../../assets/img/Logo.png" type="image/png">
 	<script src="https://kit.fontawesome.com/3a03b4384b.js" crossorigin="anonymous"></script>
 	<link rel="stylesheet" href="../../src/styles/style.css">
+	<link rel="stylesheet" href="../../src/styles/community.css">
 	<link rel="stylesheet" href="../../src/styles/islands-detailed.css">
 	<script src="../../src/scripts/main.js" defer></script>
 </head>
@@ -169,6 +254,27 @@ $foodsHtml = renderFoodCards($foods, $escape);
 			</div>
 		</div>
 	</section>
+
+
+	<?php renderCommunityStories($community_travel_storys, $escape); ?>
+
+	<!-- Island Rating Section -->
+	<section class="island-rating">
+		<div class="island-rating-container">
+			<h2>Island Rating</h2>
+			<div class="rating-card">
+				<div class="rating-value"><span class="score">4.8</span><small>/5</small></div>
+				<div class="rating-bars">
+					<div class="rating-row"><span class="label">Food</span><div class="bar"><div class="bar-fill" style="width:88%"></div></div><span class="value">4.6</span></div>
+					<div class="rating-row"><span class="label">Beaches</span><div class="bar"><div class="bar-fill" style="width:90%"></div></div><span class="value">4.8</span></div>
+					<div class="rating-row"><span class="label">Nightlife</span><div class="bar"><div class="bar-fill" style="width:74%"></div></div><span class="value">4.2</span></div>
+					<div class="rating-row"><span class="label">Atmosphere</span><div class="bar"><div class="bar-fill" style="width:94%"></div></div><span class="value">4.9</span></div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+
 
 	<footer class="site-footer">
 		<div class="site-footer-container">

@@ -215,14 +215,66 @@
 	line-height: 1.5;
 }
 
-@media (max-width: 700px) {
-	.island-beaches-grid,
-	.island-food-grid {
-		grid-template-columns: 1fr;
-	}
 
-	.island-detail-beaches > .island-detail-beaches-container > h2,
-	.island-detail-food > .island-detail-food-container > h2 {
-		font-size: clamp(1.8rem, 5vw, 2.2rem);
-	}
+
+
+.island-rating {
+	padding: 3.5rem 0;
+	background-color: #f8f6f2;
+}
+.island-rating-container {
+	max-width: 920px;
+	margin: 0 auto;
+	padding: 0 1.25rem;
+	text-align: center;
+}
+.rating-card {
+	display: inline-block;
+	background: #ffffff;
+	border-radius: 1rem;
+	padding: 1.6rem 2rem;
+	box-shadow: 0 8px 30px rgba(21,54,100,0.06);
+	margin-top: 1rem;
+	min-width: 320px;
+}
+.rating-value .score {
+	font-family: var(--font-display);
+	font-size: 2.2rem;
+	font-weight: 700;
+	color: #1a1c21;
+	margin-right: 0.35rem;
+}
+.rating-bars {
+	margin-top: 0.8rem;
+	display: grid;
+	gap: 0.6rem;
+	text-align: left;
+}
+.rating-row {
+	display: flex;
+	align-items: center;
+	gap: 0.8rem;
+}
+.rating-row .label {
+	width: 90px;
+	color: #6b7f96;
+	font-family: var(--font-body);
+}
+.bar {
+	flex: 1 1 auto;
+	height: 8px;
+	background: #e9eef3;
+	border-radius: 99px;
+	overflow: hidden;
+}
+.bar-fill {
+	height: 100%;
+	background: linear-gradient(90deg,#4dc4c4,#2aaab0);
+	border-radius: 99px;
+}
+.rating-row .value {
+	width: 38px;
+	text-align: right;
+	font-weight: 700;
+	color: #1a1c21;
 }

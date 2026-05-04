@@ -5,17 +5,26 @@ require_once __DIR__ . '/../database/mysql.php';
 $navLabel = !empty($_SESSION['user_id']) ? 'Profile' : 'Login';
 $navLink = !empty($_SESSION['user_id']) ? '../../index.php#home' : '../../src/php/login-page.php';
 
-if (isset($_FILES['fileToUpload'])) {
-    $targetDir = "../../assets/uploads/";
-    $fileName = basename($_FILES["fileToUpload"]["name"]);
-    $targetFile = $targetDir . $fileName;
-
-    $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['fileToUpload'])) {
+    $file = $_FILES['fileToUpload'];
     
-    if ($check !== false) {
-        if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $targetFile)) {
-            $_SESSION['temp_profile_picture'] = $targetFile;
-            echo "Erfolg";
+    // KI gemacht 
+    if ($file['error'] === UPLOAD_ERR_OK && !empty($file['tmp_name'])) {
+        $targetDir = "../../assets/uploads/";
+        
+        if (!is_dir($targetDir)) {
+            mkdir($targetDir, 0755, true);
+        }
+        
+        $fileName = basename($file["name"]);
+        $targetFile = $targetDir . $fileName;
+
+        $check = getimagesize($file["tmp_name"]);
+        
+        if ($check !== false) {
+            if (move_uploaded_file($file["tmp_name"], $targetFile)) {
+                $_SESSION['temp_profile_picture'] = $targetFile;
+            } 
         }
     }
     exit;
@@ -25,10 +34,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim((string) ($_POST['name'] ?? ''));
     $email = trim((string) ($_POST['email'] ?? ''));
     $password = (string) ($_POST['password'] ?? '');
+    $profilePicture = $_SESSION['temp_profile_picture'] ?? null;
 
     if ($username !== '' && $email !== '' && filter_var($email, FILTER_VALIDATE_EMAIL) && strlen($password) >= 6) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        $profilePicture = null;
 
         $stmt = mysqli_prepare(
             $conn,
@@ -94,12 +103,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <img src="../../assets/img/default-profile-img.png" alt="Profile Preview"
                                 class="profile-preview-img" id="preview-img" style="cursor: pointer;">
 
-                            <div class="camera-badge" id="camera-btn" style="cursor: pointer;">
-                                <i class="fa-solid fa-camera" style="color: rgb(255, 255, 255);"></i>
-                            </div>
-
                             <input type="file" id="fileInput" name="fileToUpload" style="display: none;"
                                 accept="image/*">
+                    </div>
+                    <div class="camera-badge" id="camera-btn" style="cursor: pointer;">
+                        <i class="fa-solid fa-camera" style="color: rgb(255, 255, 255);"></i>
                     </div>
                     <p class="upload-text">Click to upload a profile picture</p>
                 </div>
