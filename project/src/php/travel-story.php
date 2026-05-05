@@ -100,6 +100,38 @@ $navLink = !empty($_SESSION['user_id']) ? '../../index.php#home' : '../../src/ph
                         placeholder="Share your experience, tips and highlights..." required></textarea>
                 </div>
 
+                <div class="form-row">
+                    <div class="food-highlights">
+                        <i class="fa-solid fa-bowl-food" style="color: rgb(106, 192, 192);"></i>
+                        <label>Food Highlights (optional)</label>
+                    </div>
+                    <input type="text" id="food1" name="food1" placeholder="e.g Gyros, Souvlaki, ...">
+                </div>
+
+                <div class="form-row">
+                    <div class="trip-highlights">
+                        <i class="fa-solid fa-mountain-sun" style="color: rgb(106, 192, 192);"></i>
+                        <label>Trip Highlights (optional)</label>
+                    </div>
+                    <input type="text" id="trip1" name="trip1" placeholder="e.g Sunset in Oia, Red Beach, ...">
+                </div>
+
+
+                <div class="form-row">
+                    <label>Photo Gallery (optional)</label>
+                    <input type="file" id="photos" name="photos[]" class="file-input" accept="image/*" multiple>
+                    <label for="photos" class="upload-zone">
+                        <i class="fa-regular fa-images" style="color: rgb(108, 126, 147);"></i>
+                        <p class="upload-title">Drag & drop or click to upload photos</p>
+                        <p class="upload-hint">JPG, PNG up to 10MB</p>
+                    </label>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <i class="fa-regular fa-paper-plane" style="color: rgb(255, 255, 255);"></i> 
+                    Publish Story
+                </button>
+
             </form>
         </div>
     </section>

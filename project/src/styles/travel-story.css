@@ -172,3 +172,48 @@
     font-size: 0.85rem;
     color: #b8c1c7;
 }
+
+.food-highlights{
+    display: flex;
+    gap:7px;
+}
+.food-highlights i {
+    padding-top: 2px;
+}
+
+.trip-highlights{
+    display: flex;
+    gap:7px;
+    font-size: 14px;
+}
+.trip-highlights i {
+    padding-top: 5px;
+}
+
+.submit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    padding: 13px 17px;
+    margin-top: 10px;
+    background-color: var(--button-color)   ;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 1.05rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: capitalize;
+}
+
+.submit-btn:hover {
+    background-color: #5aabb0;
+    transform: translateY(-2px);
+}
+.submit-btn i {
+    font-size: 1.1rem;
+}
