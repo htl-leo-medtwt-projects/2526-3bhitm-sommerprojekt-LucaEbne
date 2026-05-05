@@ -58,7 +58,7 @@ $navLink = !empty($_SESSION['user_id']) ? '../../index.php#home' : '../../src/ph
                 <div class="form-row">
                     <label for="island">Which island did you visit</label>
                     <div class="select-with-icon">
-                        <i class="fa-solid fa-location-dot" style="color: rgb(106, 192, 192);"></i>
+                        <i class="fa-solid fa-location-dot"></i>
                         <select id="island" name="island" required>
                             <option value="">Select an island</option>
                             <option>Mykonos</option>
@@ -71,14 +71,38 @@ $navLink = !empty($_SESSION['user_id']) ? '../../index.php#home' : '../../src/ph
 
                 <div class="form-row rating-row">
                     <label>Your Rating</label>
-
+                    <div class="rating-display">
+                        <div class="star-rating" aria-label="1 out of 5 stars">
+                            <i class="fa-solid fa-star is-filled"></i>
+                            <i class="fa-regular fa-star is-empty"></i>
+                            <i class="fa-regular fa-star is-empty"></i>
+                            <i class="fa-regular fa-star is-empty"></i>
+                            <i class="fa-regular fa-star is-empty"></i>
+                        </div>
+                        <span class="rating-text">1.0</span>
+                    </div>
                 </div>
+
+                <div class="form-row">
+                    <label>Cover Image</label>
+                    <input type="file" id="cover" name="cover" class="file-input" accept="image/*">
+                    <label for="cover" class="upload-zone">
+                        <i class="fa-regular fa-images" style="color: rgb(108, 126, 147);"></i>
+                        <p class="upload-title">Drag & drop or click to upload a cover image</p>
+                        <p class="upload-hint">JPG, PNG up to 10MB</p>
+                    </label>
+                </div>
+
+
+                <div class="form-row">
+                    <label for="story">Your Story</label>
+                    <textarea type="text" class="story-input" id="story" name="story"
+                        placeholder="Share your experience, tips and highlights..." required></textarea>
+                </div>
+
             </form>
         </div>
     </section>
-
-
-
 
     <footer class="site-footer">
         <div class="site-footer-container">
