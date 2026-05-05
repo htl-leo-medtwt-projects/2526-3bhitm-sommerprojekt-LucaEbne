@@ -1,0 +1,81 @@
+.travel-story-header {
+    padding: 60px 20px;
+    text-align: center;
+    background-color: var(--primary-bg);
+}
+
+.travel-story-header-content h1 {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: var(--primary-text);
+}
+
+.travel-story-header-content p {
+    font-family: var(--font-body);
+    color: var(--secondary-text);
+    margin-bottom: 40px;
+}
+
+.story-form-wrap {
+    max-width: 650px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.story-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.form-row label {
+    display: block;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+    color: var(--primary-text);
+}
+
+.form-row input[type="text"],
+.form-row select {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background-color: #F9F9F9; 
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--primary-text);
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.form-row input[type="text"]::placeholder {
+    color: #BDC3C7;
+}
+
+.form-row input:focus, 
+.form-row select:focus {
+    border-color: var(--button-color);
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(106, 192, 192, 0.1);
+}
+
+.select-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.select-with-icon i {
+    position: absolute;
+    left: 15px;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.select-with-icon select {
+    padding-left: 40px; 
+}

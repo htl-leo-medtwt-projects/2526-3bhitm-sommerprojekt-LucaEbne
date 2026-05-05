@@ -223,7 +223,7 @@ echo "</div></section>";
 				<a href="#about" class="btn btn-primary">
 					<i class="fa-regular fa-heart" style="color: rgb(255, 255, 255);"></i>
 					Add to Favorites</a>
-				<a href="#about" class="btn btn-primary">
+				<a href="../../src/php/travel-story.php" class="btn btn-primary">
 					<i class="fa-solid fa-pen" style="color: rgb(255, 255, 255);"></i>
 					Write Travel Story</a>
 			</div>
