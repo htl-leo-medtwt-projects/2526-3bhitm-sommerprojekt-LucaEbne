@@ -2,7 +2,7 @@
 session_start();
 require './src/database/mysql.php';
 $navLabel = !empty($_SESSION['user_id']) ? 'Profile' : 'Login';
-$navLink = !empty($_SESSION['user_id']) ? '#home' : 'src/php/login-page.php';
+$navLink = !empty($_SESSION['user_id']) ? 'src/php/profile.php' : 'src/php/login-page.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">

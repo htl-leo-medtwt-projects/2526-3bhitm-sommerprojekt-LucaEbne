@@ -9,7 +9,7 @@ if (!isset($conn)) {
 }
 
 $navLabel = !empty($_SESSION['user_id']) ? 'Profile' : 'Login';
-$navLink = !empty($_SESSION['user_id']) ? '../../index.php#home' : '../../src/php/login-page.php';
+$navLink = !empty($_SESSION['user_id']) ? '../../src/php/profile.php' : '../../src/php/login-page.php';
 
 $escape = static function ($value): string {
 	return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');

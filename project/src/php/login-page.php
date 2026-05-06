@@ -3,10 +3,10 @@ session_start();
 require_once __DIR__ . '/../database/mysql.php';
 
 $navLabel = !empty($_SESSION['user_id']) ? 'Profile' : 'Login';
-$navLink = !empty($_SESSION['user_id']) ? '../../index.php#home' : '../../src/php/login-page.php';
+$navLink = !empty($_SESSION['user_id']) ? '../../src/php/profile.php' : '../../src/php/login-page.php';
 
 if (!empty($_SESSION['user_id'])) {
-    header('Location: ../../index.php#home');
+    header('Location: ../../src/php/profile.php');
     exit;
 }
 
@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     mysqli_free_result($result);
                     mysqli_stmt_close($stmt);
-                    header('Location: ../../index.php#home');
+                    header('Location: ../../src/php/profile.php');
                     exit;
                 }
 

@@ -3,7 +3,7 @@ session_start();
 require_once __DIR__ . '/../database/mysql.php';
 
 $navLabel = !empty($_SESSION['user_id']) ? 'Profile' : 'Login';
-$navLink = !empty($_SESSION['user_id']) ? '../../index.php#home' : '../../src/php/login-page.php';
+$navLink = !empty($_SESSION['user_id']) ? '../../src/php/profile.php' : '../../src/php/login-page.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['fileToUpload'])) {
     $file = $_FILES['fileToUpload'];
