@@ -1,0 +1,228 @@
+.profile-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 1rem; 
+    color: var(--fg, #333);
+}
+
+.profile-header {
+    background: #fff;
+    border-radius: 16px;
+    overflow: visible;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.banner-gradient {
+    height: 180px;
+    background: linear-gradient(135deg, #1b4d79 0%, #4da3a9 100%);
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+}
+
+.profile-info-bar {
+    display: flex;
+    align-items: center;
+    padding: 20px 40px;
+    position: relative;
+    min-height: 80px;
+}
+
+.avatar-container {
+    position: relative;
+    margin-top: -80px; 
+    margin-right: 25px;
+}
+
+.avatar-letters {
+    width: 110px;
+    height: 110px;
+    background-color: #f4eee1;
+    border: 5px solid #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #1b4d79;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.edit-avatar-btn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: #4da3a9;
+    border: 2px solid #fff;
+    color: white;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-details {
+    flex-grow: 1;
+}
+
+.user-name {
+    margin: 0;
+    font-size: 26px;
+    color: #1b4d79;
+    font-family: 'Georgia', serif; 
+}
+
+.user-email {
+    margin: 2px 0 8px 0;
+    color: #7f8c8d;
+    font-size: 14px;
+}
+
+.user-bio {
+    margin: 0;
+    color: #555;
+    font-size: 14px;
+}
+
+
+.stats-container {
+    display: flex;
+    gap: 15px;
+}
+
+.stat-box {
+    background-color: #f9f5eb;
+    border-radius: 12px;
+    padding: 10px 20px;
+    text-align: center;
+    min-width: 80px;
+}
+
+.stat-number {
+    display: block;
+    font-size: 20px;
+    font-weight: bold;
+    color: #1b4d79;
+}
+
+.stat-label {
+    display: block;
+    font-size: 10px;
+    color: #7f8c8d;
+    letter-spacing: 1px;
+    margin-top: 2px;
+}
+
+.profile-tabs {
+    display: flex;
+    background-color: #f1eae0;
+    border-radius: 12px;
+    padding: 6px;
+    margin-bottom: 25px;
+}
+
+.tab-btn {
+    flex: 1;
+    background: none;
+    border: none;
+    padding: 12px;
+    font-size: 15px;
+    color: #666;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.tab-btn.active {
+    background-color: #fff;
+    color: #333;
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.island-card {
+    background-color: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+.card-image-wrapper {
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.card-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.7));
+    color: white;
+}
+
+.island-name {
+    margin: 0;
+    font-size: 20px;
+    font-family: 'Georgia', serif;
+}
+
+.island-location {
+    margin: 4px 0 0 0;
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+.card-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #fff;
+}
+
+.btn-view {
+    color: #5c7b99;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.btn-view:hover {
+    text-decoration: underline;
+}
+
+.btn-remove {
+    background: none;
+    border: none;
+    color: #7f8c8d;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-remove:hover {
+    color: #e74c3c; 
+}
