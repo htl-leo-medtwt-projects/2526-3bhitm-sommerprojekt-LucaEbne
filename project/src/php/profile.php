@@ -38,7 +38,7 @@ $navLink = !empty($_SESSION['user_id']) ? '../../src/php/profile.php' : '../../s
 
     <div class="profile-container">
 
-        <header class="profile-header">
+        <div class="profile-header">
             <div class="banner-gradient"></div>
 
             <div class="profile-info-bar">
@@ -64,7 +64,7 @@ $navLink = !empty($_SESSION['user_id']) ? '../../src/php/profile.php' : '../../s
                     </div>
                 </div>
             </div>
-        </header>
+        </div>
 
         <nav class="profile-tabs">
             <button class="tab-btn active" onclick="showTab('favourites', this)">
@@ -74,7 +74,7 @@ $navLink = !empty($_SESSION['user_id']) ? '../../src/php/profile.php' : '../../s
                 <i class="fa-regular fa-bookmark"></i> My Stories
             </button>
             <button class="tab-btn" onclick="showTab('settings', this)">
-                Settings
+                <i class="fa-solid fa-gear"></i>Settings
             </button>
         </nav>
 
