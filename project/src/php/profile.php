@@ -2,8 +2,108 @@
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
+require_once __DIR__ . '/../database/mysql.php';
+
 $navLabel = !empty($_SESSION['user_id']) ? 'Profile' : 'Login';
 $navLink = !empty($_SESSION['user_id']) ? '../../src/php/profile.php' : '../../src/php/login-page.php';
+
+$favouritesHtml = '';
+if (!empty($_SESSION['user_id'])) {
+    $uid = $_SESSION['user_id'];
+    $stmt = $conn->prepare("
+        SELECT i.id, i.name, i.image_url, i.country
+        FROM favorite_islands fi
+        JOIN islands i ON i.id = fi.island_id
+        WHERE fi.user_id = ?
+        ORDER BY fi.created_at DESC
+    ");
+    $stmt->bind_param("i", $uid);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $rows = $result->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+
+    if (empty($rows)) {
+        $favouritesHtml = '<p style="color:#888; padding: 24px 0;">Du hast noch keine Favourites gespeichert.</p>';
+    } else {
+        foreach ($rows as $island) {
+            $id = (int) $island['id'];
+            $name = htmlspecialchars($island['name']);
+            $img = htmlspecialchars($island['image_url']);
+            $country = htmlspecialchars($island['country']);
+
+            $favouritesHtml .= "
+            <div class='island-card'>
+                <div class='card-image-wrapper' style='background-image: url(\"{$img}\");'>
+                    <div class='card-overlay'>
+                        <h3 class='island-name'>{$name}</h3>
+                        <p class='island-location'><i class='fa-solid fa-location-dot'></i> {$country}</p>
+                    </div>
+                </div>
+                <div class='card-actions'>
+                    <a href='islands-detailed.php?id={$id}' class='btn-view'>View island</a>
+                    <button class='btn-remove' data-id='{$id}'>
+                        <i class='fa-solid fa-heart'></i> Remove
+                    </button>
+                </div>
+            </div>";
+        }
+    }
+}
+
+
+$storiesHtml = '';
+if (!empty($_SESSION['user_id'])) {
+    $uid = $_SESSION['user_id'];
+    $stmt = $conn->prepare("
+        SELECT p.id, p.title, p.content, p.rating, p.created_at, i.name AS island_name
+        FROM posts p
+        LEFT JOIN islands i ON i.id = p.island_id
+        WHERE p.user_id = ?
+        ORDER BY p.created_at DESC
+    ");
+    $stmt->bind_param("i", $uid);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stories = $result->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+
+    if (empty($stories)) {
+        $storiesHtml = '<p style="color:#888; padding: 24px 0;">Du hast noch keine Stories geschrieben.</p>';
+    } else {
+        foreach ($stories as $story) {
+            $sid = (int) $story['id'];
+            $title = htmlspecialchars($story['title']);
+            $excerpt = htmlspecialchars(mb_strimwidth($story['content'], 0, 100, '…'));
+            $island = htmlspecialchars($story['island_name'] ?? 'Unknown');
+            $date = date('Y-m-d', strtotime($story['created_at']));
+            $rating = (int) $story['rating'];
+
+            $stars = '';
+            for ($i = 1; $i <= 5; $i++) {
+                $stars .= $i <= $rating
+                    ? '<i class="fa-solid fa-star"></i>'
+                    : '<i class="fa-regular fa-star"></i>';
+            }
+
+            $storiesHtml .= "
+            <div class='story-card'>
+                <div class='story-meta'>
+                    <i class='fa-solid fa-location-dot'></i> {$island}
+                    <span class='story-date'>• {$date}</span>
+                </div>
+                <div class='story-body'>
+                    <div>
+                        <h3 class='story-title'>{$title}</h3>
+                        <p class='story-excerpt'>{$excerpt}</p>
+                        <div class='story-stars'>{$stars}</div>
+                    </div>
+                    <a href='#' class='btn-read'>Read</a>
+                </div>
+            </div>";
+        }
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="de">
@@ -81,102 +181,15 @@ $navLink = !empty($_SESSION['user_id']) ? '../../src/php/profile.php' : '../../s
         <!-- TAB: Favourites -->
         <main class="tab-content active" id="tab-favourites">
             <div class="cards-grid">
-
-                <div class="island-card">
-                    <div class="card-image-wrapper"
-                        style="background-image: url('../../assets/img/islands/island-santorini.jpg');">
-                        <div class="card-overlay">
-                            <h3 class="island-name">Santorini</h3>
-                            <p class="island-location"><i class="fa-solid fa-location-dot"></i> Cyclades</p>
-                        </div>
-                    </div>
-                    <div class="card-actions">
-                        <a href="#" class="btn-view">View island</a>
-                        <button class="btn-remove"><i class="fa-solid fa-heart"></i> Remove</button>
-                    </div>
-                </div>
-
-                <div class="island-card">
-                    <div class="card-image-wrapper"
-                        style="background-image: url('../../assets/img/islands/island-mykonos.jpg');">
-                        <div class="card-overlay">
-                            <h3 class="island-name">Mykonos</h3>
-                            <p class="island-location"><i class="fa-solid fa-location-dot"></i> Cyclades</p>
-                        </div>
-                    </div>
-                    <div class="card-actions">
-                        <a href="#" class="btn-view">View island</a>
-                        <button class="btn-remove"><i class="fa-solid fa-heart"></i> Remove</button>
-                    </div>
-                </div>
-
-                <div class="island-card">
-                    <div class="card-image-wrapper"
-                        style="background-image: url('../../assets/img/islands/island-crete.jpg');">
-                        <div class="card-overlay">
-                            <h3 class="island-name">Crete</h3>
-                            <p class="island-location"><i class="fa-solid fa-location-dot"></i> Greek Islands</p>
-                        </div>
-                    </div>
-                    <div class="card-actions">
-                        <a href="#" class="btn-view">View island</a>
-                        <button class="btn-remove"><i class="fa-solid fa-heart"></i> Remove</button>
-                    </div>
-                </div>
-
+                <?php echo $favouritesHtml; ?>
             </div>
         </main>
 
         <!-- TAB: My Stories -->
         <main class="tab-content" id="tab-stories">
             <div class="stories-list">
-
-                <div class="story-card">
-                    <div class="story-meta">
-                        <i class="fa-solid fa-location-dot"></i> Santorini
-                        <span class="story-date">• 2025-08-12</span>
-                    </div>
-                    <div class="story-body">
-                        <div>
-                            <h3 class="story-title">Sunset in Oia</h3>
-                            <p class="story-excerpt">An unforgettable evening watching the sky turn pink over the
-                                caldera…</p>
-                            <div class="story-stars">
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-regular fa-star"></i>
-                            </div>
-                        </div>
-                        <a href="#" class="btn-read">Read</a>
-                    </div>
-                </div>
-
-                <div class="story-card">
-                    <div class="story-meta">
-                        <i class="fa-solid fa-location-dot"></i> Mykonos
-                        <span class="story-date">• 2025-09-03</span>
-                    </div>
-                    <div class="story-body">
-                        <div>
-                            <h3 class="story-title">Nights in Mykonos</h3>
-                            <p class="story-excerpt">Little Venice, narrow streets, and the best souvlaki of my life.
-                            </p>
-                            <div class="story-stars">
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-regular fa-star"></i>
-                            </div>
-                        </div>
-                        <a href="#" class="btn-read">Read</a>
-                    </div>
-                </div>
-
-            </div>
-
+                <?= $storiesHtml ?>
+            </div>  
             <div style="text-align:center; margin-top: 32px;">
                 <a href="travel-story.php" class="btn-new-story">Write a new story</a>
             </div>

@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let cameraBtn = document.getElementById('camera-btn');
     let previewImg = document.getElementById('preview-img');
 
+    if (!cameraBtn || !fileInput || !previewImg) return; 
     cameraBtn.addEventListener('click', () => fileInput.click());
 
     fileInput.addEventListener('change', function () {
