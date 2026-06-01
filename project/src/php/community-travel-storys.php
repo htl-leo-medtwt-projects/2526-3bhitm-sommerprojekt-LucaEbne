@@ -4,18 +4,16 @@ if (!isset($conn)) {
 }
 
 $community_travel_storys = [];
-$query = "SELECT p.id, p.user_id, p.title, p.content, p.image_url, u.username, u.profile_picture
+$query = "SELECT p.id, p.user_id, p.title, p.content, p.image_url, p.created_at, u.username, u.profile_picture
 FROM posts p
 LEFT JOIN users u ON u.id = p.user_id
-ORDER BY p.id ASC";
+ORDER BY p.created_at DESC, p.id DESC
+LIMIT 3";
 $result = mysqli_query($conn, $query);
 
 if ($result instanceof mysqli_result) {
-	for ($i = 0; $i < mysqli_num_rows($result); $i++) {
-		$row = mysqli_fetch_assoc($result);
-		if ($row) {
-			$community_travel_storys[] = $row;
-		}
+	while ($row = mysqli_fetch_assoc($result)) {
+		$community_travel_storys[] = $row;
 	}
 	mysqli_free_result($result);
 }
@@ -24,6 +22,18 @@ if ($result instanceof mysqli_result) {
 // dass alle Ausgaben sicher sind.
 $escape = static function ($value): string {
 	return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
+};
+
+$normalizeAssetPath = static function (string $value): string {
+	$value = trim($value);
+	if ($value === '') {
+		return '';
+	}
+	if (preg_match('#^(https?:)?//#i', $value)) {
+		return $value;
+	}
+	$value = preg_replace('#^(?:\.\./)+#', '', $value);
+	return ltrim($value, '/');
 };
 
 echo "<section class='community-travel' id='community'>";
@@ -35,15 +45,18 @@ if (!empty($community_travel_storys)) {
 
 	for ($i = 0; $i < count($community_travel_storys); $i++) {
 		$story = $community_travel_storys[$i];
+		$userId = (int) ($story['user_id'] ?? 0);
 		$title = $escape($story['title'] ?? 'Travel Story');
 		$content = $escape($story['content'] ?? 'No content available');
 		$username = $escape($story['username'] ?? 'Anonymous');
-		$imageUrl = trim((string)($story['image_url'] ?? ''));
-		$profilePicture = trim((string)($story['profile_picture'] ?? 'assets/img/default-profile-img.png'));
+		$imageUrl = $normalizeAssetPath((string)($story['image_url'] ?? ''));
+		$profilePicture = $normalizeAssetPath((string)($story['profile_picture'] ?? ''));
 		$safeImageUrl = $escape($imageUrl !== '' ? $imageUrl : 'assets/img/hero-santorini.jpg');
 		$safeProfilePicture = $escape($profilePicture);
+ 		$detailLink = 'src/php/story-detail.php?user_id=' . $userId;
 
-		echo "<article class='community-story-card'>
+		echo "<a class='community-story-link' href='{$detailLink}' style='text-decoration:none; color:inherit; display:block;'>
+			<article class='community-story-card'>
 				<img class='community-story-image' src='{$safeImageUrl}' alt='{$title}'>
 				<div class='community-story-content'>
 					<h3>{$title}</h3>
@@ -58,7 +71,8 @@ if (!empty($community_travel_storys)) {
 
 		echo "<span class='community-author-name'>{$username}</span></div>
 				</div>
-			</article>";
+			</article>
+		</a>";
 	}
 
 	echo "</div>";

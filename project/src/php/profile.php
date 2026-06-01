@@ -98,7 +98,7 @@ if (!empty($_SESSION['user_id'])) {
                         <p class='story-excerpt'>{$excerpt}</p>
                         <div class='story-stars'>{$stars}</div>
                     </div>
-                    <a href='#' class='btn-read'>Read</a>
+                    <a href='story-detail.php?id={$sid}' class='btn-read'>Read</a>
                 </div>
             </div>";
         }
