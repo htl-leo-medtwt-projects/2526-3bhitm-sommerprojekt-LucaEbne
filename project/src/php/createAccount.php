@@ -18,13 +18,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['fileToUpload'])) {
         
         $fileName = basename($file["name"]);
         $targetFile = $targetDir . $fileName;
-        $publicPath = 'assets/uploads/' . $fileName;
 
         $check = getimagesize($file["tmp_name"]);
         
         if ($check !== false) {
             if (move_uploaded_file($file["tmp_name"], $targetFile)) {
-                $_SESSION['temp_profile_picture'] = $publicPath;
+                $_SESSION['temp_profile_picture'] = $targetFile;
             } 
         }
     }
@@ -35,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim((string) ($_POST['name'] ?? ''));
     $email = trim((string) ($_POST['email'] ?? ''));
     $password = (string) ($_POST['password'] ?? '');
-    $profilePicture = $_SESSION['temp_profile_picture'] ?? 'assets/img/default-profile-img.png';
+    $profilePicture = $_SESSION['temp_profile_picture'] ?? '../../assets/img/default-profile-img.png';
 
     if ($username !== '' && $email !== '' && filter_var($email, FILTER_VALIDATE_EMAIL) && strlen($password) >= 6) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);

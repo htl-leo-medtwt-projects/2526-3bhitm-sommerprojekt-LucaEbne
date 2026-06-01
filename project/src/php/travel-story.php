@@ -38,14 +38,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->close();
 
         $cover_url = null;
-        if (!empty($_FILES['cover']['tmp_name'])) {
-            $uploadDir = __DIR__ . '/../../assets/uploads/';
+        if (!empty($_FILES['cover']['tmp_name']) && ($_FILES['cover']['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_OK) {
+        $uploadDir = __DIR__ . '/../../assets/uploads/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+
             $ext = strtolower(pathinfo($_FILES['cover']['name'], PATHINFO_EXTENSION));
             $allowed = ['jpg', 'jpeg', 'png', 'webp'];
             if (in_array($ext, $allowed) && $_FILES['cover']['size'] <= 10 * 1024 * 1024) {
                 $filename = uniqid('cover_') . '.' . $ext;
-                move_uploaded_file($_FILES['cover']['tmp_name'], $uploadDir . $filename);
-                $cover_url = '../../assets/uploads/' . $filename;
+                if (move_uploaded_file($_FILES['cover']['tmp_name'], $uploadDir . $filename)) {
+                    $cover_url = '../../assets/uploads/' . $filename;
+                } else {
+                    $errorMsg = 'Das Cover-Bild konnte nicht gespeichert werden.';
+                }
             }
         }
 
@@ -70,12 +77,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($_FILES['photos']['size'][$i] > 10 * 1024 * 1024)
                     continue;
                 $filename = uniqid('photo_') . '.' . $ext;
-                move_uploaded_file($tmp, $uploadDir . $filename);
-                $img_url = '../../assets/uploads/' . $filename;
-                $stmt = $conn->prepare("INSERT INTO post_images (post_id, image_url) VALUES (?, ?)");
-                $stmt->bind_param("is", $post_id, $img_url);
-                $stmt->execute();
-                $stmt->close();
+                if (move_uploaded_file($tmp, $uploadDir . $filename)) {
+                    $img_url = '../../assets/uploads/' . $filename;
+                    $stmt = $conn->prepare("INSERT INTO post_images (post_id, image_url) VALUES (?, ?)");
+                    $stmt->bind_param("is", $post_id, $img_url);
+                    $stmt->execute();
+                    $stmt->close();
+                }
             }
         }
 

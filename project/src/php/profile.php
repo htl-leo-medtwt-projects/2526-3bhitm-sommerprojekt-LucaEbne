@@ -7,6 +7,38 @@ require_once __DIR__ . '/../database/mysql.php';
 $navLabel = !empty($_SESSION['user_id']) ? 'Profile' : 'Login';
 $navLink = !empty($_SESSION['user_id']) ? '../../src/php/profile.php' : '../../src/php/login-page.php';
 
+$userData = null;
+$favouriteCount = 0;
+$storyCount = 0;
+if (!empty($_SESSION['user_id'])) {
+    $uid = $_SESSION['user_id'];
+
+    $stmt = $conn->prepare("SELECT username, email, bio, profile_picture FROM users WHERE id = ?");
+    $stmt->bind_param("i", $uid);
+    $stmt->execute();
+    $userData = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+
+    $stmt = $conn->prepare("SELECT COUNT(*) AS cnt FROM favorite_islands WHERE user_id = ?");
+    $stmt->bind_param("i", $uid);
+    $stmt->execute();
+    $favouriteCount = (int) $stmt->get_result()->fetch_assoc()['cnt'];
+    $stmt->close();
+
+    $stmt = $conn->prepare("SELECT COUNT(*) AS cnt FROM posts WHERE user_id = ?");
+    $stmt->bind_param("i", $uid);
+    $stmt->execute();
+    $storyCount = (int) $stmt->get_result()->fetch_assoc()['cnt'];
+    $stmt->close();
+}
+
+$displayName = htmlspecialchars($userData['username'] ?? 'Guest');
+$displayEmail = htmlspecialchars($userData['email'] ?? '');
+$displayBio = htmlspecialchars($userData['bio'] ?? '');
+$profilePic = $userData['profile_picture'] ?? '';
+
+$initials = strtoupper(mb_substr($userData['username'] ?? 'G', 0, 2));
+
 $favouritesHtml = '';
 if (!empty($_SESSION['user_id'])) {
     $uid = $_SESSION['user_id'];
@@ -140,29 +172,40 @@ if (!empty($_SESSION['user_id'])) {
 
         <div class="profile-header">
             <div class="banner-gradient"></div>
+            <button class="btn-logout" onclick="document.getElementById('logout-modal').classList.add('active')">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </button>
 
             <div class="profile-info-bar">
                 <div class="avatar-container">
-                    <div class="avatar-letters">EK</div>
+                    <?php if (!empty($profilePic)): ?>
+                        <img src="<?= htmlspecialchars($profilePic) ?>" alt="Profile picture" class="avatar-img"
+                            style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                    <?php else: ?>
+                        <div class="avatar-letters"><?= $initials ?></div>
+                    <?php endif; ?>
                     <button class="edit-avatar-btn"><i class="fa-solid fa-camera"></i></button>
                 </div>
 
                 <div class="user-details">
-                    <h1 class="user-name">Elena K.</h1>
-                    <p class="user-email">elena@example.com</p>
-                    <p class="user-bio">Greek island lover. Always chasing the next sunset. 🌅</p>
+                    <h1 class="user-name"><?= $displayName ?></h1>
+                    <p class="user-email"><?= $displayEmail ?></p>
+                    <p class="user-bio">
+                        <?= !empty($displayBio) ? $displayBio : '<span style="color:#aaa;">No bio yet.</span>' ?></p>
                 </div>
 
                 <div class="stats-container">
                     <div class="stat-box">
-                        <span class="stat-number">3</span>
+                        <span class="stat-number"><?= $favouriteCount ?></span>
                         <span class="stat-label">FAVOURITES</span>
                     </div>
                     <div class="stat-box">
-                        <span class="stat-number">2</span>
+                        <span class="stat-number"><?= $storyCount ?></span>
                         <span class="stat-label">STORIES</span>
                     </div>
                 </div>
+
+
             </div>
         </div>
 
@@ -189,7 +232,7 @@ if (!empty($_SESSION['user_id'])) {
         <main class="tab-content" id="tab-stories">
             <div class="stories-list">
                 <?= $storiesHtml ?>
-            </div>  
+            </div>
             <div style="text-align:center; margin-top: 32px;">
                 <a href="travel-story.php" class="btn-new-story">Write a new story</a>
             </div>
@@ -201,25 +244,45 @@ if (!empty($_SESSION['user_id'])) {
                 <h2 class="settings-title">Account settings</h2>
                 <p class="settings-subtitle">Update your personal information</p>
 
-                <div class="settings-field">
-                    <label>Name</label>
-                    <input type="text" value="Elena K.">
-                </div>
-                <div class="settings-field">
-                    <label>Email</label>
-                    <input type="text" value="elena@example.com">
-                </div>
-                <div class="settings-field">
-                    <label>Bio</label>
-                    <textarea>Greek island lover. Always chasing the next sunset. 🌅</textarea>
-                </div>
-                <div class="settings-field">
-                    <label>New password</label>
-                    <input type="password" placeholder="Leave empty to keep current">
-                </div>
-                <button class="btn-save">
-                    <i class="fa-regular fa-floppy-disk"></i> Save changes
-                </button>
+                <?php
+                // Show success message
+                if (!empty($_SESSION['settings_success'])) {
+                    echo '<div class="settings-alert settings-alert--success"><i class="fa-solid fa-circle-check"></i> ' . htmlspecialchars($_SESSION['settings_success']) . '</div>';
+                    unset($_SESSION['settings_success']);
+                }
+                // Show error messages
+                if (!empty($_SESSION['settings_errors'])) {
+                    echo '<div class="settings-alert settings-alert--error">';
+                    foreach ($_SESSION['settings_errors'] as $err) {
+                        echo '<p><i class="fa-solid fa-circle-exclamation"></i> ' . htmlspecialchars($err) . '</p>';
+                    }
+                    echo '</div>';
+                    unset($_SESSION['settings_errors']);
+                }
+                ?>
+
+                <form action="update-profile.php" method="POST">
+                    <div class="settings-field">
+                        <label for="settings-name">Name</label>
+                        <input type="text" id="settings-name" name="username" value="<?= $displayName ?>" required>
+                    </div>
+                    <div class="settings-field">
+                        <label for="settings-email">Email</label>
+                        <input type="email" id="settings-email" name="email" value="<?= $displayEmail ?>" required>
+                    </div>
+                    <div class="settings-field">
+                        <label for="settings-bio">Bio</label>
+                        <textarea id="settings-bio" name="bio"><?= $displayBio ?></textarea>
+                    </div>
+                    <div class="settings-field">
+                        <label for="settings-pw">New password</label>
+                        <input type="password" id="settings-pw" name="new_password"
+                            placeholder="Leave empty to keep current">
+                    </div>
+                    <button type="submit" class="btn-save">
+                        <i class="fa-regular fa-floppy-disk"></i> Save changes
+                    </button>
+                </form>
             </div>
         </main>
 
@@ -267,6 +330,24 @@ if (!empty($_SESSION['user_id'])) {
         </div>
     </footer>
 
+
+    <!-- Logout Modal -->
+    <div class="modal-overlay" id="logout-modal">
+        <div class="modal-box">
+            <div class="modal-icon"><i class="fa-solid fa-right-from-bracket"></i></div>
+            <h2 class="modal-title">Logout</h2>
+            <p class="modal-text">Bist du sicher, dass du dich ausloggen möchtest?</p>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn--cancel"
+                    onclick="document.getElementById('logout-modal').classList.remove('active')">
+                    Abbrechen
+                </button>
+                <a href="logout.php" class="modal-btn modal-btn--confirm">
+                    Ja, ausloggen
+                </a>
+            </div>
+        </div>
+    </div>
 
 </body>
 

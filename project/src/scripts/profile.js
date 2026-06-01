@@ -4,3 +4,11 @@ function showTab(name, btn) {
     document.getElementById('tab-' + name).classList.add('active');
     btn.classList.add('active');
 }
+
+(function () {
+    const tab = new URLSearchParams(window.location.search).get('tab');
+    if (tab) {
+        const btn = document.querySelector(`.tab-btn[onclick*="'${tab}'"]`);
+        if (btn) showTab(tab, btn);
+    }
+})();

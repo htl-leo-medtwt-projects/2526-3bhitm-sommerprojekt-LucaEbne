@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // KI hat diese if-Abfrage hinzugefügt, da ich sonst ein Session Fehler bekommen habe.
 if (session_status() !== PHP_SESSION_ACTIVE && !headers_sent()) {
 	session_start();
