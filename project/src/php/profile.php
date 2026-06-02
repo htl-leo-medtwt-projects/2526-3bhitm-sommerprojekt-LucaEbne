@@ -7,6 +7,19 @@ require_once __DIR__ . '/../database/mysql.php';
 $navLabel = !empty($_SESSION['user_id']) ? 'Profile' : 'Login';
 $navLink = !empty($_SESSION['user_id']) ? '../../src/php/profile.php' : '../../src/php/login-page.php';
 
+$normalizeAssetPath = static function (string $value): string {
+    $value = trim($value);
+    if ($value === '') {
+        return '';
+    }
+    if (preg_match('#^(https?:)?//#i', $value)) {
+        return $value;
+    }
+    // remove leading ./ or ../ segments then prefix relative to project root assets
+    $value = preg_replace('#^(?:\./|(?:\.\./)+)#', '', $value);
+    return '../../' . ltrim($value, '/');
+};
+
 $userData = null;
 $favouriteCount = 0;
 $storyCount = 0;
@@ -35,7 +48,7 @@ if (!empty($_SESSION['user_id'])) {
 $displayName = htmlspecialchars($userData['username'] ?? 'Guest');
 $displayEmail = htmlspecialchars($userData['email'] ?? '');
 $displayBio = htmlspecialchars($userData['bio'] ?? '');
-$profilePic = $userData['profile_picture'] ?? '';
+$profilePic = $normalizeAssetPath((string)($userData['profile_picture'] ?? ''));
 
 $initials = strtoupper(mb_substr($userData['username'] ?? 'G', 0, 2));
 
@@ -61,7 +74,9 @@ if (!empty($_SESSION['user_id'])) {
         foreach ($rows as $island) {
             $id = (int) $island['id'];
             $name = htmlspecialchars($island['name']);
-            $img = htmlspecialchars($island['image_url']);
+            $rawImg = trim((string)($island['image_url'] ?? ''));
+            $imgPath = $rawImg !== '' ? $normalizeAssetPath($rawImg) : '../../assets/img/islands/island-santorini.jpg';
+            $img = htmlspecialchars($imgPath);
             $country = htmlspecialchars($island['country']);
 
             $favouritesHtml .= "

@@ -11,6 +11,8 @@ if (!isset($conn)) {
 $navLabel = !empty($_SESSION['user_id']) ? 'Profile' : 'Login';
 $navLink = !empty($_SESSION['user_id']) ? '../../src/php/profile.php' : '../../src/php/login-page.php';
 
+$writeStoryHref = !empty($_SESSION['user_id']) ? '../../src/php/travel-story.php' : '../../src/php/login-page.php';
+
 $escape = static function ($value): string {
 	return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
 };
@@ -69,6 +71,17 @@ if ($result instanceof mysqli_result) {
 
 if (!$selectedIsland) {
 	die('Island not found');
+}
+
+$isFavourite = false;
+if (!empty($_SESSION['user_id'])) {
+	$userId = (int) $_SESSION['user_id'];
+	$stmt = $conn->prepare("SELECT id FROM favorite_islands WHERE user_id = ? AND island_id = ? LIMIT 1");
+	$stmt->bind_param("ii", $userId, $id);
+	$stmt->execute();
+	$stmt->store_result();
+	$isFavourite = $stmt->num_rows > 0;
+	$stmt->close();
 }
 
 $rawImage = trim((string) $selectedIsland['image_url']);
@@ -225,10 +238,15 @@ echo "</div></section>";
 			<h1><?php echo $islandName; ?></h1>
 			<p><?php echo $islandDescription; ?></p>
 			<div class="island-detail-actions">
-				<a href="#about" class="btn btn-primary">
-					<i class="fa-regular fa-heart" style="color: rgb(255, 255, 255);"></i>
-					Add to Favorites</a>
-				<a href="../../src/php/travel-story.php" class="btn btn-primary">
+				<button type="button"
+					class="btn btn-primary"
+					id="favoriteBtn"
+					data-island-id="<?php echo (int) $selectedIsland['id']; ?>"
+					data-login-url="../../src/php/login-page.php">
+					<i class="<?php echo $isFavourite ? 'fa-solid' : 'fa-regular'; ?> fa-heart" style="color: rgb(255, 255, 255);"></i>
+					<span><?php echo $isFavourite ? 'Remove from Favorites' : 'Add to Favorites'; ?></span>
+				</button>
+				<a href="<?php echo $writeStoryHref; ?>" class="btn btn-primary">
 					<i class="fa-solid fa-pen" style="color: rgb(255, 255, 255);"></i>
 					Write Travel Story</a>
 			</div>
@@ -322,6 +340,49 @@ echo "</div></section>";
 		</div>
 	</footer>
 
+	<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		const favoriteBtn = document.getElementById('favoriteBtn');
+		if (!favoriteBtn) return;
+
+		favoriteBtn.addEventListener('click', async () => {
+			const islandId = favoriteBtn.dataset.islandId;
+			const icon = favoriteBtn.querySelector('i');
+			const text = favoriteBtn.querySelector('span');
+
+			try {
+				const response = await fetch('toggle-favourite.php', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({ island_id: islandId })
+				});
+
+				const result = await response.json();
+
+				if (!result.success && result.reason === 'not_logged_in') {
+					window.location.href = favoriteBtn.dataset.loginUrl;
+					return;
+				}
+
+				if (result.success && result.action === 'added') {
+					icon.classList.remove('fa-regular');
+					icon.classList.add('fa-solid');
+					text.textContent = 'Remove from Favorites';
+				}
+
+				if (result.success && result.action === 'removed') {
+					icon.classList.remove('fa-solid');
+					icon.classList.add('fa-regular');
+					text.textContent = 'Add to Favorites';
+				}
+			} catch (error) {
+				console.error('Favourite error:', error);
+			}
+		});
+	});
+	</script>
 
 </body>
 
