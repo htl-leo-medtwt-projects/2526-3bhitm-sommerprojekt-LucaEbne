@@ -53,7 +53,8 @@ if (!empty($community_travel_storys)) {
 		$profilePicture = $normalizeAssetPath((string)($story['profile_picture'] ?? ''));
 		$safeImageUrl = $escape($imageUrl !== '' ? $imageUrl : 'assets/img/hero-santorini.jpg');
 		$safeProfilePicture = $escape($profilePicture);
- 		$detailLink = 'src/php/story-detail.php?user_id=' . $userId;
+		$postId = (int) ($story['id'] ?? 0);
+ 		$detailLink = 'src/php/story-detail.php?id=' . $postId;
 
 		echo "<a class='community-story-link' href='{$detailLink}' style='text-decoration:none; color:inherit; display:block;'>
 			<article class='community-story-card'>

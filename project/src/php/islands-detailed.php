@@ -141,6 +141,7 @@ if (!empty($community_travel_storys)) {
     for ($i = 0; $i < count($community_travel_storys); $i++) {
         $story = $community_travel_storys[$i];
         
+		$userId = (int)($story['user_id'] ?? 0);
         $title = $escape($story['title'] ?? 'Travel Story');
         $username = $escape($story['username'] ?? 'Traveler');
         $rating = (int)($story['rating'] ?? 0);
@@ -153,8 +154,11 @@ if (!empty($community_travel_storys)) {
 
         $profilePicture = trim((string)($story['profile_picture'] ?? ''));
         $safeProfilePicture = ($profilePicture !== '') ? $escape($profilePicture) : '../../assets/img/default-profile-img.png';
+		$postId = (int)($story['id'] ?? 0);
+		$detailLink = './story-detail.php?id=' . $postId;
 
-        echo "<article class='community-story-card'>
+		echo "<a class='community-story-link' href='{$detailLink}' style='text-decoration:none; color:inherit; display:block;'>
+			<article class='community-story-card'>
                 <div class='community-story-content'>
                     <div class='community-story-author'>
                         <img src='{$safeProfilePicture}' class='community-author-avatar' alt='Avatar'>
@@ -167,7 +171,8 @@ if (!empty($community_travel_storys)) {
                         <span style='font-size: 0.9em; color: #666;'>" . number_format($rating, 1) . "</span>
                     </div>
                 </div>
-            </article>";
+			</article>
+		</a>";
     }
 
     echo "</div>";

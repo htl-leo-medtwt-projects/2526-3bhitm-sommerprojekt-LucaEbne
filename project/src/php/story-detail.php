@@ -161,6 +161,8 @@ function sd_render_page(array $data): string
 	$foodHtml = $data['foodHtml'];
 	$tripHtml = $data['tripHtml'];
 	$commentsHtml = $data['commentsHtml'];
+	$storyId = (int) $data['storyId'];
+	$commentFormHtml = $data['commentFormHtml'];
 
 	return <<<HTML
 <!DOCTYPE html>
@@ -225,9 +227,54 @@ function sd_render_page(array $data): string
 	<section class="sd-comments">
 		<div class="sd-section-container">
 			<h2 class="sd-section-title">Comments</h2>
+
+			{$commentFormHtml}
+
 			{$commentsHtml}
 		</div>
 	</section>
+
+	<script>
+	function sdPostComment() {
+		const textarea = document.getElementById('sd-comment-input');
+		const msg = document.getElementById('sd-comment-msg');
+		const content = textarea.value.trim();
+		if (!content) {
+			msg.textContent = 'Bitte zuerst etwas schreiben.';
+			msg.style.color = '#c0392b';
+			return;
+		}
+		const btn = document.querySelector('.sd-comment-submit');
+		btn.disabled = true;
+		btn.innerHTML = '<i class="fa-regular fa-comment"></i> Posting...';
+
+		fetch('../../src/php/post-comment.php', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+			body: 'post_id={$storyId}&content=' + encodeURIComponent(content)
+		})
+		.then(r => r.json())
+		.then(data => {
+			if (data.success) {
+				msg.textContent = 'Kommentar gepostet!';
+				msg.style.color = 'var(--button-color)';
+				textarea.value = '';
+				setTimeout(() => location.reload(), 800);
+			} else {
+				msg.textContent = data.error || 'Etwas ist schiefgelaufen.';
+				msg.style.color = '#c0392b';
+			}
+		})
+		.catch(() => {
+			msg.textContent = 'Netzwerkfehler, bitte nochmal versuchen.';
+			msg.style.color = '#c0392b';
+		})
+		.finally(() => {
+			btn.disabled = false;
+			btn.innerHTML = '<i class="fa-regular fa-comment"></i> Post Comment';
+		});
+	}
+	</script>
 
 	<footer class="site-footer">
 		<div class="site-footer-container">
@@ -310,6 +357,20 @@ $foodHtml = sd_render_highlights('Food I Tried', sd_split_highlights((string) ($
 	$tripHtml = sd_render_highlights('Trip Highlights', sd_split_highlights((string) ($post['trip_highlights'] ?? '')), '<i class="fa-solid fa-mountain-sun" style="color: var(--button-color);"></i>');
 $commentsHtml = sd_render_comments(sd_fetch_comments($conn, $selectedStoryId));
 
+if (!empty($_SESSION['user_id'])) {
+	$commentFormHtml = '<div class="sd-comment-form-wrap">
+		<textarea id="sd-comment-input" class="sd-comment-textarea" placeholder="Write a comment..." rows="4"></textarea>
+		<div class="sd-comment-form-footer">
+			<button class="sd-comment-submit" onclick="sdPostComment()">
+				<i class="fa-regular fa-comment"></i> Post Comment
+			</button>
+		</div>
+		<p id="sd-comment-msg" class="sd-comment-msg"></p>
+	</div>';
+} else {
+	$commentFormHtml = '<div class="sd-comment-login-hint"><a href="../../src/php/login-page.php">Log in</a> to leave a comment.</div>';
+}
+
 echo sd_render_page([
 	'navLink' => $navLink,
 	'navLabel' => $navLabel,
@@ -325,4 +386,6 @@ echo sd_render_page([
 	'foodHtml' => $foodHtml,
 	'tripHtml' => $tripHtml,
 	'commentsHtml' => $commentsHtml,
+	'storyId' => $selectedStoryId,
+	'commentFormHtml' => $commentFormHtml,
 ]);
