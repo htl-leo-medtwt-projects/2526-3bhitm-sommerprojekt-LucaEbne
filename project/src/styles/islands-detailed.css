@@ -285,3 +285,100 @@
 	color: #6b7f96;
 	text-align: right;
 }
+
+
+@media (max-width: 1024px) {
+	.island-detail-hero {
+		padding: 0 1.6rem 2.6rem;
+		height: min(64vh, 640px);
+	}
+
+	.island-beaches-grid,
+	.island-food-grid {
+		grid-template-columns: repeat(2, minmax(220px, 1fr));
+	}
+
+	.rating-card {
+		min-width: 280px;
+	}
+}
+
+@media (max-width: 640px) {
+	.island-detail-hero {
+		height: min(58vh, 520px);
+		min-height: 420px;
+		padding: 0 1.1rem 2rem;
+		justify-content: center;
+		text-align: center;
+	}
+
+	.island-detail-content {
+		margin-top: 15.2rem;
+		max-width: 100%;
+	}
+
+	.island-detail-content p {
+		max-width: 100%;
+	}
+
+	.island-detail-country {
+		justify-content: center;
+		display: flex;
+		gap: 0.4rem;
+	}
+
+	.island-detail-actions {
+		justify-content: center;
+	}
+
+	.island-detail-actions .btn {
+		flex: 1 1 auto;
+		justify-content: center;
+		padding: 0.85rem 1.1rem;
+	}
+
+	.island-detail-about {
+		margin: 1.8rem auto 2.2rem;
+	}
+
+	.island-detail-about p {
+		max-width: 100%;
+	}
+
+	.island-detail-beaches,
+	.island-detail-food {
+		padding: 2.5rem 0;
+	}
+
+	.island-detail-beaches > .island-detail-beaches-container > h2,
+	.island-detail-food > .island-detail-food-container > h2 {
+		font-size: 1.8rem;
+		margin-bottom: 1.6rem;
+	}
+
+	.island-beaches-grid,
+	.island-food-grid {
+		grid-template-columns: 1fr;
+		gap: 1.1rem;
+	}
+
+	.island-beach-card img,
+	.island-food-card img {
+		height: 170px;
+	}
+
+	.island-rating {
+		padding: 2.5rem 0;
+	}
+
+	.rating-card {
+		min-width: 0;
+		width: 100%;
+		padding: 1.3rem 1.4rem;
+	}
+
+	.rating-row .label {
+		width: 72px;
+		font-size: 0.9rem;
+	}
+}

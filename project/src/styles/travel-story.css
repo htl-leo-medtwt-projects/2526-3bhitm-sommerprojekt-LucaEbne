@@ -174,7 +174,47 @@
     color: #6c7a86;
 }
 
-@media (max-width: 560px) {
+
+@media (max-width: 1024px) {
+    .story-form-wrap {
+        max-width: 100%;
+        padding: 0 1rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .travel-story-header {
+        padding: 40px 16px;
+    }
+
+    .travel-story-header-content h1 {
+        font-size: 1.9rem;
+    }
+
+    .travel-story-header-content p {
+        margin-bottom: 24px;
+        font-size: 0.95rem;
+    }
+
+    .story-form-wrap {
+        padding: 0 0.5rem;
+    }
+
+    .story-form {
+        gap: 18px;
+    }
+
+    .form-row input[type="text"],
+    .form-row select,
+    .story-input {
+        padding: 12px 14px;
+        font-size: 0.95rem;
+    }
+
+    .story-input {
+        height: 130px;
+    }
+
     .rating-criterion {
         grid-template-columns: 80px 1fr 32px;
         gap: 8px;
@@ -182,6 +222,23 @@
 
     .star-rating i {
         font-size: 16px;
+    }
+
+    .upload-zone {
+        padding: 50px 14px;
+    }
+
+    #cover-zone {
+        min-height: 200px;
+    }
+
+    #photos-zone .zone-preview.preview-gallery {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .submit-btn {
+        font-size: 0.98rem;
+        padding: 12px 16px;
     }
 }
 

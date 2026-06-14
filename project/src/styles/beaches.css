@@ -128,3 +128,58 @@
     text-align: center;
     padding: 1rem 0;
 }
+
+
+@media (max-width: 1024px) {
+	.beach-slide {
+		flex: 0 0 clamp(220px, 45vw, 360px);
+	}
+
+	.beach-card,
+	.beach-card img {
+		height: 220px;
+		min-height: 220px;
+	}
+}
+
+@media (max-width: 640px) {
+	.stunning-beaches {
+		padding: 2.5rem 0 3rem;
+		margin: 3rem 0 4rem;
+	}
+
+	.stunning-beaches-container {
+		padding: 0 0 0 1rem;
+	}
+
+	.stunning-beaches-header {
+		margin-bottom: 1.6rem;
+		padding-right: 1rem;
+	}
+
+	.stunning-beaches-header h2 {
+		font-size: 1.7rem;
+	}
+
+	.stunning-beaches-header p {
+		font-size: 0.95rem;
+	}
+
+	.beach-slide {
+		flex: 0 0 78vw;
+	}
+
+	.beach-card,
+	.beach-card img {
+		height: 200px;
+		min-height: 200px;
+	}
+
+	.beach-card-content h3 {
+		font-size: 1.15rem;
+	}
+
+	.beach-card-content p {
+		font-size: 0.88rem;
+	}
+}

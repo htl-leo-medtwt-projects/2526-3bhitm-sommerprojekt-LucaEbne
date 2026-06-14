@@ -451,3 +451,117 @@
 .sd-comment-login-hint .sd-login-cta:hover {
 	text-decoration: underline;
 }
+
+
+@media (max-width: 1024px) {
+	.sd-hero {
+		height: 420px;
+	}
+
+	.sd-hero-content {
+		padding: 0 32px 40px;
+	}
+
+	.sd-hero-title {
+		font-size: 2.4rem;
+	}
+
+	.sd-meta-bar,
+	.sd-story-container,
+	.sd-section-container {
+		padding: 24px 32px;
+	}
+
+	.sd-section-container {
+		padding-top: 0;
+		padding-bottom: 0;
+	}
+
+	.sd-gallery-grid {
+		grid-auto-rows: 180px;
+	}
+}
+
+@media (max-width: 640px) {
+	.sd-hero {
+		height: 340px;
+	}
+
+	.sd-hero-content {
+		padding: 0 18px 28px;
+	}
+
+	.sd-badge {
+		font-size: 0.72rem;
+		padding: 4px 12px;
+		margin-bottom: 12px;
+	}
+
+	.sd-hero-title {
+		font-size: 1.8rem;
+		line-height: 1.2;
+	}
+
+	.sd-meta-bar {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 14px;
+		padding: 20px 18px;
+	}
+
+	.sd-rating {
+		align-self: flex-start;
+	}
+
+	.sd-story-body,
+	.sd-gallery,
+	.sd-highlights,
+	.sd-comments {
+		padding: 32px 0;
+	}
+
+	.sd-story-container,
+	.sd-section-container {
+		padding: 0 18px;
+	}
+
+	.sd-story-text {
+		font-size: 1rem;
+	}
+
+	.sd-section-title {
+		font-size: 1.4rem;
+		margin-bottom: 18px;
+	}
+
+	.sd-gallery-grid {
+		grid-template-columns: repeat(2, 1fr);
+		grid-auto-rows: 130px;
+		gap: 8px;
+	}
+
+	.sd-gallery-item--wide {
+		grid-column: span 2;
+		grid-row: span 1;
+	}
+
+	.sd-comment-card {
+		padding: 14px 16px;
+		gap: 12px;
+	}
+
+	.sd-comment-header {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 4px;
+	}
+
+	.sd-comment-login-hint {
+		flex-wrap: wrap;
+		padding: 12px 14px;
+	}
+
+	.sd-comment-login-hint .sd-login-cta {
+		margin-left: 0;
+	}
+}

@@ -123,3 +123,49 @@
     text-align: center;
     padding: 1rem 0;
 }
+
+
+@media (max-width: 1024px) {
+	.island-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.island-card img {
+		height: 240px;
+	}
+}
+
+@media (max-width: 640px) {
+	.featured-islands {
+		padding: 3rem 0 3.5rem;
+	}
+
+	.featured-islands-header {
+		margin-bottom: 1.6rem;
+	}
+
+	.featured-islands-header h2 {
+		font-size: 1.7rem;
+	}
+
+	.featured-islands-header p {
+		font-size: 0.95rem;
+	}
+
+	.island-grid {
+		grid-template-columns: 1fr;
+		gap: 1.25rem;
+	}
+
+	.island-card img {
+		height: 200px;
+	}
+
+	.island-card-content {
+		min-height: 0;
+	}
+
+	.island-card-footer {
+		flex-wrap: wrap;
+	}
+}

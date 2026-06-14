@@ -141,3 +141,47 @@
     gap: 3px;
     font-size: 0.85rem;
 }
+
+
+@media (max-width: 1024px) {
+	.community-story-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+
+@media (max-width: 640px) {
+	.community-travel {
+		padding: 2.5rem 0;
+	}
+
+	.community-travel-header {
+		margin-bottom: 1.6rem;
+	}
+
+	.community-travel-header h2 {
+		font-size: 1.7rem;
+	}
+
+	.community-travel-header p {
+		font-size: 0.95rem;
+	}
+
+	.community-story-grid {
+		grid-template-columns: 1fr;
+		gap: 1.25rem;
+	}
+
+	.community-story-image {
+		height: 170px;
+	}
+
+	.community-story-content {
+		padding: 1.5rem;
+		min-height: 0;
+	}
+
+	.community-story-content h3 {
+		font-size: 1.2rem;
+	}
+}

@@ -510,3 +510,126 @@
     background: var(--button-color);
     box-shadow: var(--shadow-card-hover);
 }
+
+@media (max-width: 1024px) {
+	.profile-container {
+		padding: 1.5rem 1rem;
+	}
+
+	.cards-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.profile-info-bar {
+		padding: 20px 24px;
+	}
+}
+
+@media (max-width: 640px) {
+	.profile-container {
+		padding: 1rem 0.75rem;
+	}
+
+	.banner-gradient {
+		height: 130px;
+	}
+
+	.profile-info-bar {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 1rem;
+		padding: 16px 20px 20px;
+	}
+
+	.avatar-container {
+		width: 80px;
+		height: 80px;
+		margin-top: -60px;
+		margin-right: 0;
+	}
+
+	.avatar-letters {
+		font-size: 26px;
+		border-width: 4px;
+	}
+
+	.edit-avatar-btn {
+		width: 32px;
+		height: 32px;
+		font-size: 13px;
+	}
+
+	.user-name {
+		font-size: 21px;
+	}
+
+	.stats-container {
+		width: 100%;
+		justify-content: space-between;
+		gap: 8px;
+	}
+
+	.stat-box {
+		flex: 1;
+		min-width: 0;
+		padding: 8px 10px;
+	}
+
+	.stat-number {
+		font-size: 17px;
+	}
+
+	.stat-label {
+		font-size: 9px;
+	}
+
+	.profile-tabs {
+		flex-wrap: wrap;
+		gap: 6px;
+	}
+
+	.tab-btn {
+		flex: 1 1 auto;
+		padding: 10px 8px;
+		font-size: 0.85rem;
+	}
+
+	.cards-grid {
+		grid-template-columns: 1fr;
+		gap: 14px;
+	}
+
+	.card-image-wrapper {
+		height: 170px;
+	}
+
+	.story-body {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 10px;
+	}
+
+	.btn-read {
+		width: 100%;
+		text-align: center;
+	}
+
+	.settings-box {
+		padding: 20px;
+		max-width: 100%;
+	}
+
+	.btn-logout {
+		position: static;
+		margin: 12px 20px 0;
+		align-self: flex-start;
+	}
+
+	.modal-box {
+		padding: 28px 22px;
+	}
+
+	.modal-actions {
+		flex-direction: column;
+	}
+}
