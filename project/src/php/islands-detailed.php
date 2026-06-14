@@ -94,16 +94,39 @@ $islandCountry = $escape($selectedIsland['country']);
 $heroImage = $escape($heroImagePath);
 
 $beaches = [
-	['name' => 'Red Beach', 'description' => 'Dramatic red volcanic cliffs meet crystal-clear waters.', 'image' => '../../assets/img/beaches/beach-red_beach.jpg'],
-	['name' => 'Balos', 'description' => 'Shallow turquoise lagoon with soft white and pink sand.', 'image' => '../../assets/img/beaches/beach-balos.jpg'],
-	['name' => 'Elafonisi', 'description' => 'Famous for bright blue water and unique pink shoreline.', 'image' => '../../assets/img/beaches/beach-elafonisi.jpg']
+    ['name' => 'Red Beach',      'description' => 'Dramatic red volcanic cliffs meet crystal-clear waters on Santorini.',           'image' => '../../assets/img/beaches/beach-red_beach.jpg'],
+    ['name' => 'Balos',          'description' => 'Shallow turquoise lagoon with soft white and pink sand on Crete.',               'image' => '../../assets/img/beaches/beach-balos.jpg'],
+    ['name' => 'Navagio',        'description' => 'Hidden cove on Zakynthos with a famous shipwreck framed by towering white cliffs.', 'image' => '../../assets/img/beaches/beach-navagio.jpg'],
+    ['name' => 'Sarakiniko',     'description' => 'Moon-like white volcanic rock formations sculpted by wind and sea on Milos.',     'image' => '../../assets/img/beaches/beach-sarakiniko.jpg'],
+    ['name' => 'Elafonisi',      'description' => 'Pink-tinted sand and warm shallow lagoons on the southwest tip of Crete.',        'image' => '../../assets/img/beaches/beach-elafonisi.jpg'],
+    ['name' => 'Myrtos',         'description' => 'Bright white pebbles and deep blue water framed by steep green cliffs on Kefalonia.', 'image' => '../../assets/img/beaches/beach-myrtos.jpg'],
+    ['name' => 'Lindos',         'description' => 'Sheltered sandy bay below the ancient Acropolis of Lindos on Rhodes.',           'image' => '../../assets/img/beaches/beach-lindos.jpg'],
+    ['name' => 'Paradise Beach', 'description' => 'Lively golden-sand party beach with beach bars and clear water on Mykonos.',     'image' => '../../assets/img/beaches/beach-paradise.jpg'],
+    ['name' => 'Tsambika',       'description' => 'Long stretch of soft golden sand and shallow warm sea on the east coast of Rhodes.', 'image' => '../../assets/img/beaches/beach-tsambika.jpg'],
 ];
 
 $foods = [
-	['name' => 'Gyros', 'description' => 'Tender meat wrapped in crispy pita with fresh vegetables.', 'image' => '../../assets/img/food/food-gyros.jpg'],
-	['name' => 'Souvlaki', 'description' => 'Grilled skewers of marinated meat with herbs and lemon.', 'image' => '../../assets/img/food/food-souvlaki.jpg'],
-	['name' => 'Moussaka', 'description' => 'Layered eggplant, meat and creamy béchamel sauce.', 'image' => '../../assets/img/food/food-moussaka.jpg']
+    ['name' => 'Gyros',        'description' => 'Tender spit-roasted meat wrapped in warm pita with tomato, onion and tzatziki.',     'image' => '../../assets/img/food/food-gyros.jpg'],
+    ['name' => 'Souvlaki',     'description' => 'Grilled skewers of marinated meat served with herbs, lemon and fresh bread.',        'image' => '../../assets/img/food/food-souvlaki.jpg'],
+    ['name' => 'Moussaka',     'description' => 'Baked layers of eggplant, spiced minced meat and creamy béchamel sauce.',           'image' => '../../assets/img/food/food-moussaka.jpg'],
+    ['name' => 'Spanakopita',  'description' => 'Crispy filo pastry filled with spinach and tangy feta cheese.',                    'image' => '../../assets/img/food/food-spanakopita.jpg'],
+    ['name' => 'Tzatziki',     'description' => 'Cool yogurt dip with cucumber, garlic and olive oil, perfect with warm bread.',     'image' => '../../assets/img/food/food-tzatziki.jpg'],
+    ['name' => 'Horiatiki',    'description' => 'Classic Greek salad with tomatoes, cucumber, olives and a thick slab of feta.',     'image' => '../../assets/img/food/food-horiatiki.jpg'],
+    ['name' => 'Loukoumades',  'description' => 'Golden honey doughnuts dusted with cinnamon, a beloved Greek street snack.',        'image' => '../../assets/img/food/food-loukoumades.jpg'],
+    ['name' => 'Saganaki',     'description' => 'Pan-fried golden cheese, often served flambéed with a squeeze of lemon.',          'image' => '../../assets/img/food/food-saganaki.jpg'],
+    ['name' => 'Baklava',      'description' => 'Sweet layered filo pastry with chopped nuts and honey syrup.',                      'image' => '../../assets/img/food/food-baklava.jpg'],
 ];
+
+
+if (count($beaches) > 1) {
+	shuffle($beaches);
+	$beaches = array_slice($beaches, 0, min(3, count($beaches)));
+}
+
+if (count($foods) > 1) {
+	shuffle($foods);
+	$foods = array_slice($foods, 0, min(3, count($foods)));
+}
 
 $beachesHtml = renderBeachCards($beaches, $escape);
 $foodsHtml = renderFoodCards($foods, $escape);
@@ -122,6 +145,42 @@ if ($result instanceof mysqli_result) {
         $community_travel_storys[] = $row;
     }
     mysqli_free_result($result);
+}
+
+$islandRating = [
+    'overall'    => 0.0,
+    'food'       => 0.0,
+    'beaches'    => 0.0,
+    'nightlife'  => 0.0,
+    'atmosphere' => 0.0,
+    'count'      => 0,
+];
+
+$ratingQuery = "SELECT 
+                    COUNT(*) AS cnt,
+                    AVG(rating) AS overall,
+                    AVG(rating_food) AS food,
+                    AVG(rating_beaches) AS beaches,
+                    AVG(rating_nightlife) AS nightlife,
+                    AVG(rating_atmosphere) AS atmosphere
+                FROM posts
+                WHERE island_id = {$id}
+                  AND rating IS NOT NULL";
+
+$result = mysqli_query($conn, $ratingQuery);
+
+if ($result instanceof mysqli_result) {
+    $row = mysqli_fetch_assoc($result);
+    mysqli_free_result($result);
+
+    if ($row && (int) $row['cnt'] > 0) {
+        $islandRating['count']      = (int) $row['cnt'];
+        $islandRating['overall']    = round((float) $row['overall'], 1);
+        $islandRating['food']       = round((float) $row['food'], 1);
+        $islandRating['beaches']    = round((float) $row['beaches'], 1);
+        $islandRating['nightlife']  = round((float) $row['nightlife'], 1);
+        $islandRating['atmosphere'] = round((float) $row['atmosphere'], 1);
+    }
 }
 
 function getStarRatingHtml(int $rating): string {
@@ -215,10 +274,10 @@ echo "</div></section>";
 <body>
 	<!-- Header / Navigation -->
 	<header>
-		<div class="logo">
+		<a class="logo" href="../../index.php#home">
 			<img src="../../assets/img/Logo.png" alt="Aegean Breeze Logo">
 			<span>Aegean Breeze</span>
-		</div>
+		</a>
 		<nav>
 			<div class="nav-element"><a href="../../index.php#home">Home</a></div>
 			<div class="nav-element"><a href="../../index.php#islands">Islands</a></div>
@@ -285,15 +344,20 @@ echo "</div></section>";
 	<section class="island-rating">
 		<div class="island-rating-container">
 			<h2>Island Rating</h2>
+			<?php if ($islandRating['count'] > 0): ?>
 			<div class="rating-card">
-				<div class="rating-value"><span class="score">4.8</span><small>/5</small></div>
+				<div class="rating-value"><span class="score"><?php echo number_format($islandRating['overall'], 1); ?></span><small>/5</small></div>
 				<div class="rating-bars">
-					<div class="rating-row"><span class="label">Food</span><div class="bar"><div class="bar-fill" style="width:88%"></div></div><span class="value">4.6</span></div>
-					<div class="rating-row"><span class="label">Beaches</span><div class="bar"><div class="bar-fill" style="width:90%"></div></div><span class="value">4.8</span></div>
-					<div class="rating-row"><span class="label">Nightlife</span><div class="bar"><div class="bar-fill" style="width:74%"></div></div><span class="value">4.2</span></div>
-					<div class="rating-row"><span class="label">Atmosphere</span><div class="bar"><div class="bar-fill" style="width:94%"></div></div><span class="value">4.9</span></div>
+					<div class="rating-row"><span class="label">Food</span><div class="bar"><div class="bar-fill" style="width:<?php echo $islandRating['food'] / 5 * 100; ?>%"></div></div><span class="value"><?php echo number_format($islandRating['food'], 1); ?></span></div>
+					<div class="rating-row"><span class="label">Beaches</span><div class="bar"><div class="bar-fill" style="width:<?php echo $islandRating['beaches'] / 5 * 100; ?>%"></div></div><span class="value"><?php echo number_format($islandRating['beaches'], 1); ?></span></div>
+					<div class="rating-row"><span class="label">Nightlife</span><div class="bar"><div class="bar-fill" style="width:<?php echo $islandRating['nightlife'] / 5 * 100; ?>%"></div></div><span class="value"><?php echo number_format($islandRating['nightlife'], 1); ?></span></div>
+					<div class="rating-row"><span class="label">Atmosphere</span><div class="bar"><div class="bar-fill" style="width:<?php echo $islandRating['atmosphere'] / 5 * 100; ?>%"></div></div><span class="value"><?php echo number_format($islandRating['atmosphere'], 1); ?></span></div>
 				</div>
+				<p class="rating-count"><?php echo $islandRating['count']; ?> <?php echo $islandRating['count'] === 1 ? 'Bewertung' : 'Bewertungen'; ?></p>
 			</div>
+			<?php else: ?>
+			<p class="community-empty">Noch keine Bewertungen für diese Insel.</p>
+			<?php endif; ?>
 		</div>
 	</section>
 
@@ -303,10 +367,10 @@ echo "</div></section>";
 		<div class="site-footer-container">
 			<div class="site-footer-top">
 				<div class="site-footer-brand">
-					<div class="site-footer-logo">
+					<a class="site-footer-logo" href="../../index.php#home">
 						<img src="../../assets/img/Logo.png" alt="Aegean Breeze Logo">
 						<span>Aegean Breeze</span>
-					</div>
+					</a>
 					<p>Your ultimate guide to the most beautiful islands, beaches and hidden gems of Greece.</p>
 				</div>
 

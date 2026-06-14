@@ -57,10 +57,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         $stmt = $conn->prepare(
-            "INSERT INTO posts (user_id, island_id, title, content, image_url, rating, food_highlights, trip_highlights)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+            "INSERT INTO posts (user_id, island_id, title, content, image_url, rating, rating_food, rating_beaches, rating_nightlife, rating_atmosphere, food_highlights, trip_highlights)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         );
-        $stmt->bind_param("iisssdss", $user_id, $island_id, $title, $story, $cover_url, $rating, $food_highlights, $trip_highlights);
+        $stmt->bind_param(
+            "iisssdiiiiss",
+            $user_id,
+            $island_id,
+            $title,
+            $story,
+            $cover_url,
+            $rating,
+            $rating_food,
+            $rating_beaches,
+            $rating_nightlife,
+            $rating_atmosphere,
+            $food_highlights,
+            $trip_highlights
+        );
         $stmt->execute();
         $post_id = $conn->insert_id;
         $stmt->close();
@@ -109,10 +123,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <!-- Header / Navigation -->
     <header>
-        <div class="logo">
+        <a class="logo" href="../../index.php#home">
             <img src="../../assets/img/Logo.png" alt="Aegean Breeze Logo">
             <span>Aegean Breeze</span>
-        </div>
+        </a>
         <nav>
             <div class="nav-element"><a href="../../index.php#home">Home</a></div>
             <div class="nav-element"><a href="../../index.php#islands">Islands</a></div>
@@ -280,10 +294,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="site-footer-container">
             <div class="site-footer-top">
                 <div class="site-footer-brand">
-                    <div class="site-footer-logo">
+                    <a class="site-footer-logo" href="../../index.php#home">
                         <img src="../../assets/img/Logo.png" alt="Aegean Breeze Logo">
                         <span>Aegean Breeze</span>
-                    </div>
+                    </a>
                     <p>Your ultimate guide to the most beautiful islands, beaches and hidden gems of Greece.</p>
                 </div>
 

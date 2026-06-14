@@ -60,10 +60,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <!-- Header / Navigation -->
     <header>
-        <div class="logo">
+        <a class="logo" href="../../index.php#home">
             <img src="../../assets/img/Logo.png" alt="Aegean Breeze Logo">
             <span>Aegean Breeze</span>
-        </div>
+        </a>
         <nav>
             <div class="nav-element"><a href="../../index.php#home">Home</a></div>
             <div class="nav-element"><a href="../../index.php#islands">Islands</a></div>

@@ -22,10 +22,10 @@ $navLink = !empty($_SESSION['user_id']) ? 'src/php/profile.php' : 'src/php/login
 <body>
 	<!-- Header / Navigation -->
 	<header>
-		<div class="logo">
+		<a class="logo" href="#home">
 			<img src="assets/img/Logo.png" alt="Aegean Breeze Logo">
 			<span>Aegean Breeze</span>
-		</div>
+		</a>
 		<nav>
 			<div class="nav-element"><a href="#home">Home</a></div>
 			<div class="nav-element"><a href="#islands">Islands</a></div>
@@ -52,10 +52,10 @@ $navLink = !empty($_SESSION['user_id']) ? 'src/php/profile.php' : 'src/php/login
 		<div class="site-footer-container">
 			<div class="site-footer-top">
 				<div class="site-footer-brand">
-					<div class="site-footer-logo">
+					<a class="site-footer-logo" href="#home">
 						<img src="assets/img/Logo.png" alt="Aegean Breeze Logo">
 						<span>Aegean Breeze</span>
-					</div>
+					</a>
 					<p>Your ultimate guide to the most beautiful islands, beaches and hidden gems of Greece.</p>
 				</div>
 

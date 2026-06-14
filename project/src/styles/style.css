@@ -80,6 +80,7 @@ header {
 	display: flex;
 	align-items: center;
 	gap: var(--spacing-sm);
+	text-decoration: none;
 }
 
 .logo img {
@@ -208,6 +209,7 @@ nav {
 	font-size: 1.95rem;
 	font-weight: 700;
 	color: #ffffff;
+	text-decoration: none;
 }
 
 .site-footer-logo img {

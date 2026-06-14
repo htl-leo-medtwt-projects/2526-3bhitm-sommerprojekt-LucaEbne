@@ -36,6 +36,11 @@
     overflow-x: auto;
     overscroll-behavior-x: contain;
     -webkit-overflow-scrolling: touch;
+    /* allow touch devices to pan horizontally */
+    touch-action: pan-x;
+    -ms-touch-action: pan-x;
+    /* hide scrollbars in some browsers and normalize behavior */
+    -ms-overflow-style: none;
     scroll-snap-type: x mandatory;
     padding: 0.35rem var(--spacing-lg) 0.65rem 0;
     scroll-padding-left: 0;

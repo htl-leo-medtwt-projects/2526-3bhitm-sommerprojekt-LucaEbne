@@ -170,10 +170,10 @@ if (!empty($_SESSION['user_id'])) {
 
     <!-- Header / Navigation (inline) -->
     <header>
-        <div class="logo">
+        <a class="logo" href="../../index.php#home">
             <img src="../../assets/img/Logo.png" alt="Aegean Breeze Logo">
             <span>Aegean Breeze</span>
-        </div>
+        </a>
         <nav>
             <div class="nav-element"><a href="../../index.php#home">Home</a></div>
             <div class="nav-element"><a href="../../index.php#islands">Islands</a></div>
@@ -308,10 +308,10 @@ if (!empty($_SESSION['user_id'])) {
         <div class="site-footer-container">
             <div class="site-footer-top">
                 <div class="site-footer-brand">
-                    <div class="site-footer-logo">
+                    <a class="site-footer-logo" href="../../index.php#home">
                         <img src="../../assets/img/Logo.png" alt="Aegean Breeze Logo">
                         <span>Aegean Breeze</span>
-                    </div>
+                    </a>
                     <p>Your ultimate guide to the most beautiful islands, beaches and hidden gems of Greece.</p>
                 </div>
 

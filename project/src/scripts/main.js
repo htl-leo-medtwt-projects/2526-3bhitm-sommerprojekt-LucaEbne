@@ -27,3 +27,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+// Wheel-to-horizontal scroll fallback for sliders (mouse wheel / trackpad)
+document.addEventListener('DOMContentLoaded', () => {
+    const sliders = document.querySelectorAll('.beach-slider');
+    sliders.forEach(slider => {
+        slider.addEventListener('wheel', (e) => {
+            // Only handle when there's a vertical scroll delta
+            if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+                e.preventDefault();
+                slider.scrollLeft += e.deltaY;
+            }
+        }, { passive: false });
+    });
+});
