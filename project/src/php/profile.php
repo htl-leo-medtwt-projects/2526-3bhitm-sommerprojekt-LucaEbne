@@ -199,7 +199,6 @@ if (!empty($_SESSION['user_id'])) {
                     <?php else: ?>
                         <div class="avatar-letters"><?= $initials ?></div>
                     <?php endif; ?>
-                    <button class="edit-avatar-btn"><i class="fa-solid fa-camera"></i></button>
                 </div>
 
                 <div class="user-details">

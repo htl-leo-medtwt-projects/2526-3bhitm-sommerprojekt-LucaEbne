@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let fileInput = document.getElementById('fileInput');
     let cameraBtn = document.getElementById('camera-btn');
     let previewImg = document.getElementById('preview-img');
+    let uploadError = document.getElementById('upload-error');
 
     if (!cameraBtn || !fileInput || !previewImg) return; 
     cameraBtn.addEventListener('click', () => fileInput.click());
@@ -9,6 +10,11 @@ document.addEventListener('DOMContentLoaded', () => {
     fileInput.addEventListener('change', function () {
         if (this.files && this.files[0]) {
             let file = this.files[0];
+
+            if (uploadError) {
+                uploadError.style.display = 'none';
+                uploadError.textContent = '';
+            }
 
             let reader = new FileReader();
             reader.onload = (e) => previewImg.src = e.target.result;
@@ -21,8 +27,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: "POST",
                 body: formData
             })
-                .then(response => response.text())
-                .then(data => console.log("Upload-Antwort:", data))
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.success) {
+                        if (uploadError) {
+                            uploadError.textContent = data.message;
+                            uploadError.style.display = 'block';
+                        }
+                        previewImg.src = "../../assets/img/default-profile-img.png";
+                        fileInput.value = "";
+                    }
+                })
                 .catch(err => console.error("Fehler:", err));
         }
     });

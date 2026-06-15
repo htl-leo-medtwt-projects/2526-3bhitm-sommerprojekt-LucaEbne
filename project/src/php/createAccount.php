@@ -7,9 +7,31 @@ $navLink = !empty($_SESSION['user_id']) ? '../../src/php/profile.php' : '../../s
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['fileToUpload'])) {
     $file = $_FILES['fileToUpload'];
-    
+
+    $maxFileSize = 2 * 1024 * 1024;
+
+    header('Content-Type: application/json');
+
     // KI gemacht 
+    if ($file['error'] === UPLOAD_ERR_INI_SIZE || $file['error'] === UPLOAD_ERR_FORM_SIZE) {
+        echo json_encode([
+            'success' => false,
+            'error' => 'image_too_large',
+            'message' => 'Das hochgeladene Bild ist zu groß. Maximale Dateigröße: 2 MB.'
+        ]);
+        exit;
+    }
+
     if ($file['error'] === UPLOAD_ERR_OK && !empty($file['tmp_name'])) {
+        if ($file['size'] > $maxFileSize) {
+            echo json_encode([
+                'success' => false,
+                'error' => 'image_too_large',
+                'message' => 'Das hochgeladene Bild ist zu groß. Maximale Dateigröße: 2 MB.'
+            ]);
+            exit;
+        }
+
         $targetDir = "../../assets/uploads/";
         
         if (!is_dir($targetDir)) {
@@ -24,8 +46,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['fileToUpload'])) {
         if ($check !== false) {
             if (move_uploaded_file($file["tmp_name"], $targetFile)) {
                 $_SESSION['temp_profile_picture'] = $targetFile;
-            } 
+                echo json_encode(['success' => true]);
+            } else {
+                echo json_encode([
+                    'success' => false,
+                    'error' => 'upload_failed',
+                    'message' => 'Das Bild konnte nicht hochgeladen werden.'
+                ]);
+            }
+        } else {
+            echo json_encode([
+                'success' => false,
+                'error' => 'invalid_image',
+                'message' => 'Die hochgeladene Datei ist kein gültiges Bild.'
+            ]);
         }
+    } else {
+        echo json_encode([
+            'success' => false,
+            'error' => 'upload_error',
+            'message' => 'Beim Hochladen des Bildes ist ein Fehler aufgetreten.'
+        ]);
     }
     exit;
 }
@@ -110,6 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <i class="fa-solid fa-camera" style="color: rgb(255, 255, 255);"></i>
                     </div>
                     <p class="upload-text">Click to upload a profile picture</p>
+                    <p class="upload-error" id="upload-error" style="display: none;"></p>
                 </div>
 
                 <form class="login-form" method="post" action="">

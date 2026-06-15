@@ -143,6 +143,14 @@ body {
     color: #6B7280;
 }
 
+.upload-error {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    color: #DC2626;
+    text-align: center;
+    margin: 0;
+}
+
 .login-card {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(12px);

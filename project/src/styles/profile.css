@@ -620,7 +620,6 @@
 	}
 
 	.btn-logout {
-		position: static;
 		margin: 12px 20px 0;
 		align-self: flex-start;
 	}
