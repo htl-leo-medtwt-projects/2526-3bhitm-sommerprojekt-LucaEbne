@@ -48,7 +48,7 @@ function sd_fetch_gallery_images(mysqli $conn, int $id): array
 function sd_fetch_comments(mysqli $conn, int $id): array
 {
 	$comments = [];
-	$result = mysqli_query($conn, "SELECT c.content, c.created_at, u.username, u.profile_picture FROM comments c JOIN users u ON u.id = c.user_id WHERE c.post_id = {$id} ORDER BY c.created_at ASC");
+	$result = mysqli_query($conn, "SELECT c.id, c.user_id, c.content, c.created_at, u.username, u.profile_picture FROM comments c JOIN users u ON u.id = c.user_id WHERE c.post_id = {$id} ORDER BY c.created_at ASC");
 	if ($result instanceof mysqli_result) {
 		while ($row = mysqli_fetch_assoc($result)) {
 			$comments[] = $row;
@@ -125,7 +125,7 @@ function sd_render_highlights(string $title, array $items, string $iconHtml = ''
 	return $html . '</div></div></section>';
 }
 
-function sd_render_comments(array $comments): string
+function sd_render_comments(array $comments, int $currentUserId): string
 {
 	if (empty($comments)) {
 		return '<p class="sd-comments-empty">No comments yet. Be the first to share your thoughts!</p>';
@@ -133,13 +133,20 @@ function sd_render_comments(array $comments): string
 
 	$html = '<div class="sd-comments-list">';
 	foreach ($comments as $comment) {
+		$commentId = (int) ($comment['id'] ?? 0);
+		$commentUserId = (int) ($comment['user_id'] ?? 0);
 		$username = sd_escape($comment['username'] ?? 'User');
 		$picture = trim((string) ($comment['profile_picture'] ?? ''));
 		$content = sd_escape($comment['content'] ?? '');
 		$date = sd_format_date((string) ($comment['created_at'] ?? ''), 'M j, Y');
 		$avatar = sd_render_avatar($picture, (string) ($comment['username'] ?? 'User'), 'sd-comment-avatar', (string) ($comment['username'] ?? 'U'));
 
-		$html .= '<div class="sd-comment-card"><div class="sd-comment-avatar-wrap">' . $avatar . '</div><div class="sd-comment-body"><div class="sd-comment-header"><span class="sd-comment-author">' . $username . '</span><span class="sd-comment-date">' . $date . '</span></div><p class="sd-comment-text">' . $content . '</p></div></div>';
+		$deleteBtn = '';
+		if ($currentUserId > 0 && $currentUserId === $commentUserId) {
+			$deleteBtn = '<button class="sd-comment-delete" onclick="sdDeleteComment(' . $commentId . ')" title="Kommentar löschen"><i class="fa-solid fa-trash"></i></button>';
+		}
+
+		$html .= '<div class="sd-comment-card" id="sd-comment-' . $commentId . '"><div class="sd-comment-avatar-wrap">' . $avatar . '</div><div class="sd-comment-body"><div class="sd-comment-header"><span class="sd-comment-author">' . $username . '</span><span class="sd-comment-date">' . $date . '</span>' . $deleteBtn . '</div><p class="sd-comment-text">' . $content . '</p></div></div>';
 	}
 
 	return $html . '</div>';
@@ -163,6 +170,7 @@ function sd_render_page(array $data): string
 	$commentsHtml = $data['commentsHtml'];
 	$storyId = (int) $data['storyId'];
 	$commentFormHtml = $data['commentFormHtml'];
+	$deletePostHtml = $data['deletePostHtml'];
 
 	return <<<HTML
 <!DOCTYPE html>
@@ -176,8 +184,9 @@ function sd_render_page(array $data): string
 	<link rel="stylesheet" href="../../src/styles/style.css">
 	<link rel="stylesheet" href="../../src/styles/story-detail.css">
 	<script src="../../src/scripts/main.js" defer></script>
+	<script src="../../src/scripts/story-detail.js" defer></script>
 </head>
-<body>
+<body data-story-id="{$storyId}">
 	<header>
 		<a class="logo" href="../../index.php#home">
 			<img src="../../assets/img/Logo.png" alt="Aegean Breeze Logo">
@@ -212,6 +221,7 @@ function sd_render_page(array $data): string
 			<div class="sd-stars">{$starsHtml}</div>
 			<span class="sd-rating-value">{$rating}.0</span>
 		</div>
+		{$deletePostHtml}
 	</div>
 
 	<section class="sd-story-body">
@@ -234,47 +244,28 @@ function sd_render_page(array $data): string
 		</div>
 	</section>
 
-	<script>
-	function sdPostComment() {
-		const textarea = document.getElementById('sd-comment-input');
-		const msg = document.getElementById('sd-comment-msg');
-		const content = textarea.value.trim();
-		if (!content) {
-			msg.textContent = 'Bitte zuerst etwas schreiben.';
-			msg.style.color = '#c0392b';
-			return;
-		}
-		const btn = document.querySelector('.sd-comment-submit');
-		btn.disabled = true;
-		btn.innerHTML = '<i class="fa-regular fa-comment"></i> Posting...';
+	<div class="modal-overlay" id="sd-delete-modal">
+		<div class="modal-box">
+			<div class="modal-icon"><i class="fa-solid fa-trash"></i></div>
+			<h2 class="modal-title" id="sd-delete-modal-title">Löschen</h2>
+			<p class="modal-text" id="sd-delete-modal-text">Bist du sicher, dass du das löschen möchtest?</p>
+			<div class="modal-actions">
+				<button class="modal-btn modal-btn--cancel" onclick="sdCloseDeleteModal()">Abbrechen</button>
+				<button class="modal-btn modal-btn--danger" id="sd-delete-modal-confirm">Löschen</button>
+			</div>
+		</div>
+	</div>
 
-		fetch('../../src/php/post-comment.php', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-			body: 'post_id={$storyId}&content=' + encodeURIComponent(content)
-		})
-		.then(r => r.json())
-		.then(data => {
-			if (data.success) {
-				msg.textContent = 'Kommentar gepostet!';
-				msg.style.color = 'var(--button-color)';
-				textarea.value = '';
-				setTimeout(() => location.reload(), 800);
-			} else {
-				msg.textContent = data.error || 'Etwas ist schiefgelaufen.';
-				msg.style.color = '#c0392b';
-			}
-		})
-		.catch(() => {
-			msg.textContent = 'Netzwerkfehler, bitte nochmal versuchen.';
-			msg.style.color = '#c0392b';
-		})
-		.finally(() => {
-			btn.disabled = false;
-			btn.innerHTML = '<i class="fa-regular fa-comment"></i> Post Comment';
-		});
-	}
-	</script>
+	<div class="modal-overlay" id="sd-error-modal">
+		<div class="modal-box">
+			<div class="modal-icon"><i class="fa-solid fa-circle-exclamation"></i></div>
+			<h2 class="modal-title">Fehler</h2>
+			<p class="modal-text" id="sd-error-modal-text">Etwas ist schiefgelaufen.</p>
+			<div class="modal-actions">
+				<button class="modal-btn modal-btn--cancel" onclick="document.getElementById('sd-error-modal').classList.remove('active')">OK</button>
+			</div>
+		</div>
+	</div>
 
 	<footer class="site-footer">
 		<div class="site-footer-container">
@@ -355,7 +346,8 @@ $starsHtml = sd_render_stars($rating);
 $galleryHtml = sd_render_gallery(sd_fetch_gallery_images($conn, $selectedStoryId));
 $foodHtml = sd_render_highlights('Food I Tried', sd_split_highlights((string) ($post['food_highlights'] ?? '')), '<i class="fa-solid fa-utensils" style="color: var(--button-color);"></i>');
 	$tripHtml = sd_render_highlights('Trip Highlights', sd_split_highlights((string) ($post['trip_highlights'] ?? '')), '<i class="fa-solid fa-mountain-sun" style="color: var(--button-color);"></i>');
-$commentsHtml = sd_render_comments(sd_fetch_comments($conn, $selectedStoryId));
+$currentUserId = (int) ($_SESSION['user_id'] ?? 0);
+$commentsHtml = sd_render_comments(sd_fetch_comments($conn, $selectedStoryId), $currentUserId);
 
 if (!empty($_SESSION['user_id'])) {
 	$commentFormHtml = '<div class="sd-comment-form-wrap">
@@ -369,6 +361,13 @@ if (!empty($_SESSION['user_id'])) {
 	</div>';
 } else {
 	$commentFormHtml = '<div class="sd-comment-login-hint"><a href="../../src/php/login-page.php">Log in</a> to leave a comment.</div>';
+}
+
+$postOwnerId = (int) ($post['user_id'] ?? 0);
+if ($currentUserId > 0 && $currentUserId === $postOwnerId) {
+	$deletePostHtml = '<button class="sd-delete-post-btn" onclick="sdDeletePost(' . $selectedStoryId . ')" title="Beitrag löschen"><i class="fa-solid fa-trash"></i> Beitrag löschen</button>';
+} else {
+	$deletePostHtml = '';
 }
 
 echo sd_render_page([
@@ -388,4 +387,5 @@ echo sd_render_page([
 	'commentsHtml' => $commentsHtml,
 	'storyId' => $selectedStoryId,
 	'commentFormHtml' => $commentFormHtml,
+	'deletePostHtml' => $deletePostHtml,
 ]);
