@@ -10,17 +10,23 @@ if (!empty($_SESSION['user_id'])) {
     exit;
 }
 
+$loginError = '';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim((string)($_POST['email'] ?? ''));
     $password = (string)($_POST['password'] ?? '');
 
-    if ($email !== '' && $password !== '') {
+    if ($email === '' || $password === '') {
+        $loginError = 'E-Mail oder Passwort ist falsch.';
+    } else {
         $stmt = mysqli_prepare($conn, 'SELECT id, username, email, password FROM users WHERE email = ? LIMIT 1');
 
         if ($stmt) {
             mysqli_stmt_bind_param($stmt, 's', $email);
             mysqli_stmt_execute($stmt);
             $result = mysqli_stmt_get_result($stmt);
+
+            $loginError = 'E-Mail oder Passwort ist falsch.';
 
             if ($result instanceof mysqli_result) {
                 $user = mysqli_fetch_assoc($result);
@@ -83,9 +89,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <p>Login to share your travel stories</p>
                 </div>
                 <form class="login-form" method="post" action="">
+                    <?php if ($loginError !== ''): ?>
+                        <p class="login-error"><?php echo htmlspecialchars($loginError, ENT_QUOTES, 'UTF-8'); ?></p>
+                    <?php endif; ?>
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" placeholder="your@email.com" required>
+                        <input type="email" id="email" name="email" placeholder="your@email.com" value="<?php echo htmlspecialchars($email ?? '', ENT_QUOTES, 'UTF-8'); ?>" required>
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
