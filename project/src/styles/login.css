@@ -143,14 +143,6 @@ body {
     color: #6B7280;
 }
 
-.upload-error {
-    font-family: var(--font-body);
-    font-size: 0.75rem;
-    color: #DC2626;
-    text-align: center;
-    margin: 0;
-}
-
 .login-card {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(12px);
@@ -238,18 +230,6 @@ body {
     margin-bottom: 1rem;
 }
 
-.login-error {
-    font-family: var(--font-body);
-    font-size: 0.85rem;
-    color: #DC2626;
-    background-color: rgba(220, 38, 38, 0.08);
-    border: 1px solid rgba(220, 38, 38, 0.25);
-    border-radius: 0.5rem;
-    padding: 0.6rem 0.85rem;
-    text-align: center;
-    margin: 0;
-}
-
 .btn-login {
     width: 100%;
     height: 48px;
@@ -283,14 +263,18 @@ body {
     text-decoration: underline;
 }
 
-
+/* =========================================
+   Responsive: Tablet (<=1024px)
+   ========================================= */
 @media (max-width: 1024px) {
 	.login-card {
 		max-width: 26rem;
 	}
 }
 
-
+/* =========================================
+   Responsive: Mobile (<=640px)
+   ========================================= */
 @media (max-width: 640px) {
 	.login-page {
 		padding: 24px 14px;
@@ -327,4 +311,18 @@ body {
 	.btn-login {
 		height: 44px;
 	}
+}
+
+
+.input-error {
+    display: block;
+    margin-top: 6px;
+    font-size: 0.85rem;
+    color: #e05252;
+    font-family: var(--font-body);
+}
+
+.form-group input:has(~ .input-error) {
+    border-color: #e05252;
+    outline-color: #e05252;
 }

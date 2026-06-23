@@ -8,66 +8,33 @@ $navLink = !empty($_SESSION['user_id']) ? '../../src/php/profile.php' : '../../s
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['fileToUpload'])) {
     $file = $_FILES['fileToUpload'];
 
-    $maxFileSize = 2 * 1024 * 1024;
-
-    header('Content-Type: application/json');
-
-    // KI gemacht 
-    if ($file['error'] === UPLOAD_ERR_INI_SIZE || $file['error'] === UPLOAD_ERR_FORM_SIZE) {
-        echo json_encode([
-            'success' => false,
-            'error' => 'image_too_large',
-            'message' => 'Das hochgeladene Bild ist zu groß. Maximale Dateigröße: 2 MB.'
-        ]);
-        exit;
-    }
-
     if ($file['error'] === UPLOAD_ERR_OK && !empty($file['tmp_name'])) {
-        if ($file['size'] > $maxFileSize) {
-            echo json_encode([
-                'success' => false,
-                'error' => 'image_too_large',
-                'message' => 'Das hochgeladene Bild ist zu groß. Maximale Dateigröße: 2 MB.'
-            ]);
-            exit;
-        }
-
         $targetDir = "../../assets/uploads/";
-        
+
         if (!is_dir($targetDir)) {
             mkdir($targetDir, 0755, true);
         }
-        
-        $fileName = basename($file["name"]);
-        $targetFile = $targetDir . $fileName;
 
         $check = getimagesize($file["tmp_name"]);
-        
+
         if ($check !== false) {
+            $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+            $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+            if (!in_array($extension, $allowedExtensions, true)) {
+                $extension = 'jpg';
+            }
+            $fileName = 'profile_' . bin2hex(random_bytes(8)) . '.' . $extension;
+            $targetFile = $targetDir . $fileName;
+
             if (move_uploaded_file($file["tmp_name"], $targetFile)) {
                 $_SESSION['temp_profile_picture'] = $targetFile;
-                echo json_encode(['success' => true]);
-            } else {
-                echo json_encode([
-                    'success' => false,
-                    'error' => 'upload_failed',
-                    'message' => 'Das Bild konnte nicht hochgeladen werden.'
-                ]);
+                echo json_encode(['success' => true, 'path' => $targetFile]);
+                exit;
             }
-        } else {
-            echo json_encode([
-                'success' => false,
-                'error' => 'invalid_image',
-                'message' => 'Die hochgeladene Datei ist kein gültiges Bild.'
-            ]);
         }
-    } else {
-        echo json_encode([
-            'success' => false,
-            'error' => 'upload_error',
-            'message' => 'Beim Hochladen des Bildes ist ein Fehler aufgetreten.'
-        ]);
     }
+
+    echo json_encode(['success' => false]);
     exit;
 }
 
@@ -78,22 +45,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $profilePicture = $_SESSION['temp_profile_picture'] ?? '../../assets/img/default-profile-img.png';
 
     if ($username !== '' && $email !== '' && filter_var($email, FILTER_VALIDATE_EMAIL) && strlen($password) >= 6) {
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        $stmt = mysqli_prepare(
-            $conn,
-            'INSERT INTO users (username, email, password, profile_picture, created_at) VALUES (?, ?, ?, ?, NOW())'
-        );
+        $checkStmt = mysqli_prepare($conn, 'SELECT id FROM users WHERE email = ?');
+        mysqli_stmt_bind_param($checkStmt, 's', $email);
+        mysqli_stmt_execute($checkStmt);
+        mysqli_stmt_store_result($checkStmt);
+        $emailExists = mysqli_stmt_num_rows($checkStmt) > 0;
+        mysqli_stmt_close($checkStmt);
 
-        if ($stmt) {
-            mysqli_stmt_bind_param($stmt, 'ssss', $username, $email, $hashedPassword, $profilePicture);
+        if ($emailExists) {
+            $errorMessage = 'Diese E-Mail-Adresse ist bereits registriert. Bitte melde dich an oder verwende eine andere E-Mail.';
+        } else {
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-            if (mysqli_stmt_execute($stmt)) {
-                header('Location: ../../src/php/login-page.php');
-                exit;
+            $stmt = mysqli_prepare(
+                $conn,
+                'INSERT INTO users (username, email, password, profile_picture, created_at) VALUES (?, ?, ?, ?, NOW())'
+            );
+
+            if ($stmt) {
+                mysqli_stmt_bind_param($stmt, 'ssss', $username, $email, $hashedPassword, $profilePicture);
+
+                if (mysqli_stmt_execute($stmt)) {
+                    unset($_SESSION['temp_profile_picture']);
+                    header('Location: ../../src/php/login-page.php');
+                    exit;
+                }
+
+                mysqli_stmt_close($stmt);
             }
-
-            mysqli_stmt_close($stmt);
         }
     }
 }
@@ -151,10 +131,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <i class="fa-solid fa-camera" style="color: rgb(255, 255, 255);"></i>
                     </div>
                     <p class="upload-text">Click to upload a profile picture</p>
-                    <p class="upload-error" id="upload-error" style="display: none;"></p>
                 </div>
 
-                <form class="login-form" method="post" action="">
+                <form class="login-form" id="create-account-form" method="post" action="">
                     <div class="form-group">
                         <label for="name">Name</label>
                         <input type="text" id="name" name="name" placeholder="Elena K." required>
@@ -162,7 +141,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" placeholder="you@example.com" required>
+                        <input type="email" id="email" name="email" placeholder="you@example.com" required
+                            value="<?php echo htmlspecialchars($email ?? ''); ?>">
+                        <?php if (!empty($errorMessage)): ?>
+                            <span class="input-error"><?php echo htmlspecialchars($errorMessage); ?></span>
+                        <?php endif; ?>
                     </div>
 
                     <div class="form-group">
